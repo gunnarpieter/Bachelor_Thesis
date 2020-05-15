@@ -1,0 +1,50 @@
+\section{Related Work}\label{relatedwork}
+In this chapter you demonstrate that you are sufficiently aware of the
+state-of-art knowledge of the problem domain that you have investigated as
+well as demonstrating that you have found a \emph{new} solution / approach / method.\newline \newline
+
+Many options exist to attempt to reduce the amount of energy used by a Access Point. Some of these options have already been reviewed and within these papers two many categories can be found.\newline
+The first category utilizes different modes of the AP, namely a wake and sleep mode or on and off. 
+
+
+The approach taken by the authors of \cite{6983074,4489442,pscBatteryWLAN} is putting the AP to sleep in between two separate beacons. A very common beacon interval is 100 ms \cite{?} which is a small amount of time. This approach is interesting as such a system has been implemented on the station side to increase battery life, which has been paritialy explained in section \ref{section:PowerManagement}. Next to this, it provides prospective regarding the possible energy saving of other solutions as the authors \cite{6983074} have calculated an energy reduction of 17\%.
+
+
+
+% #ON/OFF or WAKE/SLEEP
+
+% 	Dynamic Base Station Switching-On/Off Strategies for Green Cellular Networks
+% 	https://ieeexplore-ieee-org.ru.idm.oclc.org/document/6489498
+
+
+% 	# FIXED SLEEP TIME:
+% 	Power Saving Control Method for Battery-Powered Portable Wireless LAN Access Points in an Overlapping BSS Environment
+% 	https://www.researchgate.net/publication/220238439_Power_Saving_Control_Method_for_Battery-Powered_Portable_Wireless_LAN_Access_Points_in_an_Overlapping_BSS_Environment
+
+% 	A wireless AP power saving algorithm by changing operating mode and altering transmission power in IEEE 802.11 WLAN
+% 	This paper uses ON/OFF with FIXED TIME, and adjusts transmission power 
+% 	https://ieeexplore-ieee-org.ru.idm.oclc.org/document/6983074/references#references
+
+% 	QoS-Enabled Power Saving Access Points for IEEE 802.11e Networks
+% 	Framework for a power saving quality-of-service (QoS)
+% 	https://ieeexplore-ieee-org.ru.idm.oclc.org/document/4489442
+
+	
+%# Dynamic SLEEP TIME
+\noindent
+ An approach that utilizes the same technique but applies an enhancement is performed by the authors of \cite{7502830}. They do not use a fixed sleep/off time. This, is comparable to the approach of dynamically switching described in section \ref{section:SwitchingDynamically} as this also takes advantages of the lull periods to decrease the amount of energy consumed.
+
+% # Transmission Power Control (TPC) approach:
+% SP-TPC: a self-protective energy efficient communication strategy for IEEE 802.11 WLANs
+% This paper adjusts the power transmission to reduce the energy consumption of the AP.
+% https://ieeexplore-ieee-org.ru.idm.oclc.org/abstract/document/1400406
+
+% !!THIS PAPER IS IN BOTH!!
+% A wireless AP power saving algorithm by changing operating mode and altering transmission power in IEEE 802.11 WLAN
+% This paper uses ON/OFF with FIXED TIME, and adjusts transmission power 
+% https://ieeexplore-ieee-org.ru.idm.oclc.org/document/6983074/references#references
+
+
+% # Other useful papers/articles:
+% Usage Patterns in an Urban WiFi Network
+% https://ieeexplore-ieee-org.ru.idm.oclc.org/document/5401061

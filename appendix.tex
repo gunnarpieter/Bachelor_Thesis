@@ -1,0 +1,329 @@
+\section{General}\label{appendixA}
+Appendices are \emph{optional} chapters in which you cover additional material that is required to support your
+hypothesis, experiments, measurements, conclusions, etc. that would otherwise
+clutter the presentation of your research.
+
+
+\section{detailed AP setup}\label{access_point}
+For this experiment a few criteria should be met by the Access Point: Support up to IEEE 802.11ac, OpenWRT 19.07.02 capable and be widely available. The access point thus became a TP-LINK Archer C7 AC1750 EU v2 it is an mid-range router that supports up to IEEE 802.11ac with a maximum speed of 450 Mbps and 1,3 Gbps on 2,4 GHz and 5GHz respectively. The AP can host a File Transfer Protocol (FTP) server. It is thus possible to remove the 'Server' part from the setup, however, this would diminish the resembles of the setup to a typical AP setups. Next to that, it would burden the AP with running a FTP-server and retrieving the file. Which will unnecessarily cause an increase in power consumption.
+\subsubsection{AP WiFi Settings}
+The AP needs to be told which WiFi settings to create a WiFi network with. Among these settings are what WiFi standard to allow/use and which bandwidth to use in OpenWRT these settings are called hwmode and htmode respectively. Within this paper these two settings will be used to force the AP in to creating connections with the specified standard. Two ways exist to adjust the settings of the network namely the web interface that is integrated in to OpenWRT and a wireless config file which can be accessed using SSH. Within this paper the SSH method is used to adjust the settings of the network directly. One of the configuration of the 5 GHz network used is displayed in listing \ref{code:5NetworkSettings}. 
+
+\begin{lstlisting}[caption={5 GHz IEEE 802.11a network settings},label={code:5NetworkSettings}]
+config wifi-device 'radio0'
+        option type 'mac80211'
+        option hwmode '11a'
+        option path 'pci0000:00/0000:00:00.0'
+        option channel 'auto'
+
+config wifi-iface 'default_radio0'
+        option device 'radio0'
+        option network 'lan'
+        option mode 'ap'
+        option encryption 'none'
+        option ssid 'OpenWrt'
+\end{lstlisting}
+\noindent
+Visible here are the various settings used for the network but the interesting ones are hwmode and htmode or a lack thereof. The hwmode is set to the 5 GHz WiFi standard a, this standard does not come with the option to adjust the bandwidth. The option hwmode only supports the older versions of IEEE 802.11 (a/b/g), meaning that hwmode 'ac' does not work. However, that is where htmode can force IEEE 802.11 n and ac standards \cite{hwmodeHtmode}. Because out of the standards used n and ac are the only two that have the capability to adjust the bandwidth. Thus if the option of htmode is added to the wireless config file the AP will create a network using that bandwidth. Which are on within OpenWRT 'HT20' or 'HT40' for IEEE 802.11 n and 'VHT20', 'VHT40', 'VHT80' and 'VHT160' for IEEE 802.11ac. An example of this is listing \ref{code:5ACNetworkSettings} which displays the wireless config file for an network which only allows IEEE 802.11ac 80MHz connections.
+
+\begin{lstlisting}[caption={5 GHz IEEE 802.11ac 80MHz network settings},label={code:5ACNetworkSettings}]
+config wifi-device 'radio0'
+        option type 'mac80211'
+        option hwmode '11a'
+        option htmode 'VHT80'
+        option path 'pci0000:00/0000:00:00.0'
+        option channel 'auto'
+...
+\end{lstlisting}
+
+\section{Energy and power the difference}
+This paper will use the terms energy and power frequently. Energy is the cost to perform work or do something whereas power is the rate of energy per unit of time. Within this paper the amount of energy that it took the AP to perform a certain task will be measured. Because not everyone might be familiar with energy and power their meaning will be explained in a simple example, Lets compare an electricity cable with a water pipe. Through this water pipe flows 1 liter of water per second. This can be compared to power. As power is how much water flows through the pipe per unit of time. Energy is how much water has flowed through the pipe, for this we need to know how long the water has flown through the pipe. Say that this was 1 minute (60s), then $60s \cdot 1l/s= 60$ liters would have come out of the end of the pipe.\\
+However for our AP it is not that simple. The problem is that it that the power or flow will not be as consistent. This means that very frequent measuring should take place to ensure that at the end of the performed work accurate energy calculations can be made.
+
+\section{Measurement code explained}\label{appendixB}
+Within this appendix we will explain the purpose of the code that is used to measure the amount of energy draw by the AP. The code can be found on GitLab\footnote{\url{https://gitlab.science.ru.nl/gnoordbruis/EnergyConsumption}}\newline 
+\newline
+Within this program we use libcurl \cite{curl} to fetch the files from our server onto our query device. The code segments below are all code surrounding the retrieval of the file within the experiment and is mainly setting up curl and executing it.
+\begin{lstlisting}
+static size_t write(void* buffer, size_t size, size_t nmemb, void* param){
+    std::string& text = *static_cast<std::string*>(param);
+    size_t totalsize = size * nmemb;
+    text.append(static_cast<char*>(buffer), totalsize);
+    return totalsize;
+}
+\end{lstlisting}
+The above function write is a callback used by curl in the next code segment. Here curl writes the incoming data to memory instead of to disk space. This should prevent waiting on write IO operations.
+%http://txt2html.sourceforge.net/sample.txt
+\begin{lstlisting}
+int retrieve_File(string* result, const char* url) {
+	CURLcode res;
+	CURL* curl = curl_easy_init();
+	curl_global_init(CURL_GLOBAL_DEFAULT);
+
+	if (url == ""){
+		url = "TEST_URL";
+	}
+
+	if (curl) {
+		curl_easy_setopt(curl, CURLOPT_URL, url);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, result);
+		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+
+		res = curl_easy_perform(curl);
+
+		curl_easy_cleanup(curl);
+
+		if (res != CURLE_OK) {
+			std::cerr << "curl error: " << res << '\n';
+			return 1;
+		}
+	}
+	else {
+		return 1;
+	}
+    curl_global_cleanup();
+	return 0;
+}
+\end{lstlisting}
+With this code segment line 3 and 4 setup the curl environment to perform http request.
+On line 11 we set the URL to where curl should get the file. next to that, 12 and 13 set the function that is used to write the incoming data to a string and set the string that data should be written to. The actual curl request is performed on line 16 which returns a code which indicated either success or failure of the curl http request. Line 20-24 verifies if the request has been performed correctly. If it did not we return 1 meaning failure. If curl was not able to perform setup properly we also return failure on line 26-28. Then finally on line 18 and 29-30 all resources that curl used are released and 0 meaning success is returned.\\
+\\
+There are two ways to get power measurements from the voltage current bricklet. One of these is using a command \lstinline{voltage_current_v2_get_power} which returns an int with the current power usage in mW. Because plethora of measurements need to be taken it is better and advised by tinkerforge to use a callback function. This function is just like write above. Once the callback function is registered the brick daemon calls it when some conditions are met. The power callback function that is used within this paper is: 
+\begin{lstlisting}
+void callBackPower(int32_t power, void* user_data) {
+    (void)user_data; // Avoid unused parameter warning
+
+	dataPoint point;
+	point.power = power;
+	dataVector.push_back(point);
+}
+\end{lstlisting}
+The callback has default arguments of which only one is needed. This is the \lstinline{int32_t power}, using the newly received measurement a new dataPoint is created. The newly created datapoint named point is a struct with a timestamp in epoch ms and an int power. So everytime this function is called the power and timestamp are recorded such that afterwards the energy consumption can be measured.\\
+\\
+The main function is used to get all user input with the function input. This sets the needed URL and filename to which the result is written at the end. Then we create and initialize an IP connection with brick daemon, this daemon is a service that handles communication between the bricklets and our API calls, the voltage current bricklet object is initialized too. Now that the everything is setup, the callback function for the power can be registerd and how often it should be called. The arguments for \lstinline{voltage_current_v2_set_power_callback_configuration} are the voltage-current bricklet object, the number of ms between each callback, if the value(power) needs to change before calling, Constraint field, a minimum and a maximum value field. Now that the callback is set the voltage current bricklet will utilize the callback immediately. Thus, the file retrieval is started, directly after the file retrieval the connection and voltage current bricklet are destroyed. The results are put out to the indicated file.
+\begin{lstlisting}
+int main(void) {
+	char url[1024];
+	string filename;
+	string result;
+		
+	input(url, &filename);
+	
+	ipcon_create(&ipcon);
+	voltage_current_v2_create(&vc, UID, &ipcon);
+	if (ipcon_connect(&ipcon, HOST, PORT) < 0) {
+		cout << "Could not connect\n";
+		return 1;
+	}
+
+	voltage_current_v2_register_callback(&vc, VOLTAGE_CURRENT_V2_CALLBACK_POWER, (void (*)(void))callBackPower, NULL);
+	voltage_current_v2_set_power_callback_configuration(&vc, 10, false, 'x', 0, 0);
+
+	int retrieval = retrieve_File(&result, url);
+
+	voltage_current_v2_destroy(&vc);
+	ipcon_destroy(&ipcon);
+
+	output(&result, filename, url);
+
+    return 0;
+}\end{lstlisting}
+
+\section{Raw measurement results}\label{appendixC}
+\section{Experiment results 2.4Ghz}
+%1MB:
+\begin{table}[H]
+\caption{Experiment results of 1MB text file and 2.5GHz}
+\begin{tabular}{llllll}
+{WiFi Standard}                 & {1MB file}                                  & {Run 1}                        & {Run 2}                        & {Run 3}                        & {Avg}                          \\ \hline
+\multicolumn{1}{|l|}{{B}}       & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3308.72}} & \multicolumn{1}{r|}{{3293.22}} & \multicolumn{1}{r|}{{3292.41}} & \multicolumn{1}{r|}{{3298.12}} \\ \hline
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{3663.00}} & \multicolumn{1}{r|}{{3554.00}} & \multicolumn{1}{r|}{{3614.00}} & \multicolumn{1}{r|}{{3610.33}} \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{670.00}}  & \multicolumn{1}{r|}{{670.00}}  & \multicolumn{1}{r|}{{620.00}}  & \multicolumn{1}{r|}{{653.33}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{2216.84}} & \multicolumn{1}{r|}{{2206.46}} & \multicolumn{1}{r|}{{2041.30}} & \multicolumn{1}{r|}{{2154.87}} \\ \cline{2-6} 
+{}                              & {}                                  & {}                             & {}                             & {}                             & {}                             \\ \hline
+\multicolumn{1}{|l|}{{G}}       & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3808.42}} & \multicolumn{1}{r|}{{3466.48}} & \multicolumn{1}{r|}{{3403.93}} & \multicolumn{1}{r|}{{3559.61}} \\ \hline
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4345.00}} & \multicolumn{1}{r|}{{4028.00}} & \multicolumn{1}{r|}{{3918.00}} & \multicolumn{1}{r|}{{4097.00}} \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{370.00}}  & \multicolumn{1}{r|}{{410.00}}  & \multicolumn{1}{r|}{{420.00}}  & \multicolumn{1}{r|}{{400.00}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{1409.12}} & \multicolumn{1}{r|}{{1421.26}} & \multicolumn{1}{r|}{{1429.65}} & \multicolumn{1}{r|}{{1420.01}} \\ \cline{2-6} 
+{}                              & {}                                  & {}                             & {}                             & {}                             & {}                             \\ \hline
+\multicolumn{1}{|l|}{{N2-HT20}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{2939.65}} & \multicolumn{1}{r|}{{2798.89}} & \multicolumn{1}{r|}{{2946.64}} & \multicolumn{1}{r|}{{2895.06}} \\ \hline
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{3115.00}} & \multicolumn{1}{r|}{{3953.00}} & \multicolumn{1}{r|}{{3832.00}} & \multicolumn{1}{r|}{{3633.33}} \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{190.00}}  & \multicolumn{1}{r|}{{180.00}}  & \multicolumn{1}{r|}{{210.00}}  & \multicolumn{1}{r|}{{193.33}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{558.53}}  & \multicolumn{1}{r|}{{503.80}}  & \multicolumn{1}{r|}{{618.79}}  & \multicolumn{1}{r|}{{560.38}}  \\ \cline{2-6} 
+{}                              & {}                                  & {}                             & {}                             & {}                             & {}                             \\ \hline
+\multicolumn{1}{|l|}{{N2-HT40}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3053.00}} & \multicolumn{1}{r|}{{2834.00}} & \multicolumn{1}{r|}{{2675.00}} & \multicolumn{1}{r|}{{2854.00}} \\ \hline
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{3053.00}} & \multicolumn{1}{r|}{{2981.00}} & \multicolumn{1}{r|}{{2675.00}} & \multicolumn{1}{r|}{{2903.00}} \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{100.00}}  & \multicolumn{1}{r|}{{110.00}}  & \multicolumn{1}{r|}{{140.00}}  & \multicolumn{1}{r|}{{116.67}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{305.30}}  & \multicolumn{1}{r|}{{311.74}}  & \multicolumn{1}{r|}{{374.50}}  & \multicolumn{1}{r|}{{330.51}}  \\ \cline{2-6} 
+\end{tabular}
+\end{table}
+
+%10MB
+\begin{table}[H]
+\caption{Experiment results of 10MB text file and 2.5GHz}
+\begin{tabular}{llllll}
+{WiFi Standard}                 & {10MB file}                                  & {Run 1}                         & {Run 2}                         & {Run 3}                         & {Avg}                           \\ \hline
+\multicolumn{1}{|l|}{{B}}       & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3568.11}}  & \multicolumn{1}{r|}{{3564.04}}  & \multicolumn{1}{r|}{{3584.01}}  & \multicolumn{1}{|r|}{{3572.05}}  \\ \hline
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4136.00}}  & \multicolumn{1}{r|}{{4038.00}}  & \multicolumn{1}{r|}{{4184.00}}  & \multicolumn{1}{r|}{{4119.33}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{6220.00}}  & \multicolumn{1}{r|}{{6340.00}}  & \multicolumn{1}{r|}{{6180.00}}  & \multicolumn{1}{r|}{{6246.67}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{22193.65}} & \multicolumn{1}{r|}{{22596.00}} & \multicolumn{1}{r|}{{22149.17}} & \multicolumn{1}{r|}{{22312.94}} \\ \cline{2-6} 
+{}                              & {}                                  & {}                              & {}                              & {}                              & {}                              \\ \hline
+\multicolumn{1}{|l|}{{G}}       & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3887.71}}  & \multicolumn{1}{r|}{{3887.15}}  & \multicolumn{1}{r|}{{3890.54}}  & \multicolumn{1}{r|}{{3888.47}}  \\ \hline
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4368.00}}  & \multicolumn{1}{r|}{{4710.00}}  & \multicolumn{1}{r|}{{4381.00}}  & \multicolumn{1}{r|}{{4486.33}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{3560.00}}  & \multicolumn{1}{r|}{{3710.00}}  & \multicolumn{1}{r|}{{3610.00}}  & \multicolumn{1}{r|}{{3626.67}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{13840.26}} & \multicolumn{1}{r|}{{14421.32}} & \multicolumn{1}{r|}{{14044.86}} & \multicolumn{1}{r|}{{14102.15}} \\ \cline{2-6} 
+{}                              & {}                                  & {}                              & {}                              & {}                              & {}                              \\ \hline
+\multicolumn{1}{|l|}{{N2-HT20}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3862.84}}  & \multicolumn{1}{r|}{{3822.03}}  & \multicolumn{1}{r|}{{4037.09}}  & \multicolumn{1}{r|}{{3907.32}}  \\ \hline
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4027.00}}  & \multicolumn{1}{r|}{{4050.00}}  & \multicolumn{1}{r|}{{4539.00}}  & \multicolumn{1}{r|}{{4205.33}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{1950.00}}  & \multicolumn{1}{r|}{{1690.00}}  & \multicolumn{1}{r|}{{1870.00}}  & \multicolumn{1}{r|}{{1836.67}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{7532.53}}  & \multicolumn{1}{r|}{{6459.23}}  & \multicolumn{1}{r|}{{7549.35}}  & \multicolumn{1}{r|}{{7180.37}}  \\ \cline{2-6} 
+{}                              & {}                                  & {}                              & {}                              & {}                              & {}                              \\ \hline
+\multicolumn{1}{|l|}{{N2-HT40}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3712.18}}  & \multicolumn{1}{r|}{{3723.08}}  & \multicolumn{1}{r|}{{3720.56}}  & \multicolumn{1}{r|}{{3718.61}}  \\ \hline
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4002.00}}  & \multicolumn{1}{r|}{{3990.00}}  & \multicolumn{1}{r|}{{4027.00}}  & \multicolumn{1}{r|}{{4006.33}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{960.00}}   & \multicolumn{1}{r|}{{940.00}}   & \multicolumn{1}{r|}{{900.00}}   & \multicolumn{1}{r|}{{933.33}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{3563.69}}  & \multicolumn{1}{r|}{{3499.70}}  & \multicolumn{1}{r|}{{3348.50}}  & \multicolumn{1}{r|}{{3470.63}}  \\ \cline{2-6} 
+\end{tabular}
+\end{table}
+
+%100MB
+\begin{table}[H]
+\caption{Experiment results of 100MB text file and 2.5GHz}
+\begin{tabular}{llllll}
+{WiFi Standard}                 & {100MB file}                                  & {Run 1}                          & {Run 2}                          & {Run 3}                          & {Avg}                            \\ \hline
+\multicolumn{1}{|l|}{{B}}       & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3632.91}}   & \multicolumn{1}{r|}{{3679.77}}   & \multicolumn{1}{r|}{{3686.67}}   & \multicolumn{1}{r|}{{3666.45}}   \\ \hline
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4404.00}}   & \multicolumn{1}{r|}{{4611.00}}   & \multicolumn{1}{r|}{{4478.00}}   & \multicolumn{1}{r|}{{4497.67}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{61170.00}}  & \multicolumn{1}{r|}{{58780.00}}  & \multicolumn{1}{r|}{{57600.00}}  & \multicolumn{1}{r|}{{59183.33}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{222225.01}} & \multicolumn{1}{r|}{{216297.16}} & \multicolumn{1}{r|}{{212352.01}} & \multicolumn{1}{r|}{{216958.06}} \\ \cline{2-6} 
+{}                              & {}                                  & {}                               & {}                               & {}                               & {}                               \\ \hline
+\multicolumn{1}{|l|}{{G}}       & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3881.06}}   & \multicolumn{1}{r|}{{3838.22}}   & \multicolumn{1}{r|}{{3858.93}}   & \multicolumn{1}{r|}{{3859.40}}   \\ \hline
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4502.00}}   & \multicolumn{1}{r|}{{4551.00}}   & \multicolumn{1}{r|}{{4660.00}}   & \multicolumn{1}{r|}{{4571.00}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{37060.00}}  & \multicolumn{1}{r|}{{38580.00}}  & \multicolumn{1}{r|}{{38060.00}}  & \multicolumn{1}{r|}{{37900.00}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{143832.07}} & \multicolumn{1}{r|}{{148078.56}} & \multicolumn{1}{r|}{{146871.01}} & \multicolumn{1}{r|}{{146260.55}} \\ \cline{2-6} 
+{}                              & {}                                  & {}                               & {}                               & {}                               & {}                               \\ \hline
+\multicolumn{1}{|l|}{{N2-HT20}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{4036.35}}   & \multicolumn{1}{r|}{{4031.71}}   & \multicolumn{1}{r|}{{4030.97}}   & \multicolumn{1}{r|}{{4033.01}}   \\ \hline
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4563.00}}   & \multicolumn{1}{r|}{{4575.00}}   & \multicolumn{1}{r|}{{4563.00}}   & \multicolumn{1}{r|}{{4567.00}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{19830.00}}  & \multicolumn{1}{r|}{{19450.00}}  & \multicolumn{1}{r|}{{19500.00}}  & \multicolumn{1}{r|}{{19593.33}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{80040.81}}  & \multicolumn{1}{r|}{{78416.67}}  & \multicolumn{1}{r|}{{78603.98}}  & \multicolumn{1}{r|}{{79020.49}}  \\ \cline{2-6} 
+{}                              & {}                                  & {}                               & {}                               & {}                               & {}                               \\ \hline
+\multicolumn{1}{|l|}{{N2-HT40}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{4032.99}}   & \multicolumn{1}{r|}{{4027.33}}   & \multicolumn{1}{r|}{{4034.17}}   & \multicolumn{1}{r|}{{4031.50}}   \\ \hline
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4502.00}}   & \multicolumn{1}{r|}{{4527.00}}   & \multicolumn{1}{r|}{{4491.00}}   & \multicolumn{1}{r|}{{4506.67}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{9600.00}}   & \multicolumn{1}{r|}{{9520.00}}   & \multicolumn{1}{r|}{{9530.00}}   & \multicolumn{1}{r|}{{9550.00}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{38716.72}}  & \multicolumn{1}{r|}{{38340.14}}  & \multicolumn{1}{r|}{{38445.65}}  & \multicolumn{1}{r|}{{38500.84}}  \\ \cline{2-6} 
+\end{tabular}
+\end{table}
+\section{Experiment results 5Ghz}
+\begin{table}[H]
+\caption{Experiment results of 1MB text file and 5GHz}
+\begin{tabular}{llllll}
+{WiFi Standard}                  & {1MB file}                                  & {Run 1}                        & {Run 2}                        & {Run 3}                        & {Avg}                          \\ \hline
+\multicolumn{1}{|l|}{{A}}        & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3063.88}} & \multicolumn{1}{r|}{{3090.67}} & \multicolumn{1}{r|}{{3095.88}} & \multicolumn{1}{r|}{{3083.48}} \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{3333.00}} & \multicolumn{1}{r|}{{3369.00}} & \multicolumn{1}{r|}{{3357.00}} & \multicolumn{1}{r|}{{3353.00}} \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{330.00}}  & \multicolumn{1}{r|}{{350.00}}  & \multicolumn{1}{r|}{{320.00}}  & \multicolumn{1}{r|}{{333.33}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{1011.08}} & \multicolumn{1}{r|}{{1081.73}} & \multicolumn{1}{r|}{{990.68}}  & \multicolumn{1}{r|}{{1027.83}} \\ \cline{2-6} 
+{}                               & {}                                  & {}                             & {}                             & {}                             & {}                             \\ \hline
+\multicolumn{1}{|l|}{{N5-HT20}}  & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3706.00}} & \multicolumn{1}{r|}{{3287.53}} & \multicolumn{1}{r|}{{3623.26}} & \multicolumn{1}{r|}{{3538.93}} \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4234.00}} & \multicolumn{1}{r|}{{3296.00}} & \multicolumn{1}{r|}{{3870.00}} & \multicolumn{1}{r|}{{3800.00}} \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{170.00}}  & \multicolumn{1}{r|}{{160.00}}  & \multicolumn{1}{r|}{{180.00}}  & \multicolumn{1}{r|}{{170.00}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{630.02}}  & \multicolumn{1}{r|}{{526.00}}  & \multicolumn{1}{r|}{{652.19}}  & \multicolumn{1}{r|}{{602.74}}  \\ \cline{2-6} 
+{}                               & {}                                  & {}                             & {}                             & {}                             & {}                             \\ \hline
+\multicolumn{1}{|l|}{{N5-HT40}}  & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3332.00}} & \multicolumn{1}{r|}{{3354.20}} & \multicolumn{1}{r|}{{3332.00}} & \multicolumn{1}{r|}{{3339.40}} \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{3332.00}} & \multicolumn{1}{r|}{{3369.00}} & \multicolumn{1}{r|}{{3332.00}} & \multicolumn{1}{r|}{{3344.33}} \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{80.00}}   & \multicolumn{1}{r|}{{90.00}}   & \multicolumn{1}{r|}{{90.00}}   & \multicolumn{1}{r|}{{86.67}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{66.56}}  & \multicolumn{1}{r|}{{301.88}}  & \multicolumn{1}{r|}{{299.88}}  & \multicolumn{1}{r|}{{289.44}}  \\ \cline{2-6} 
+{}                               & {}                                  & {}                             & {}                             & {}                             & {}                             \\ \hline
+\multicolumn{1}{|l|}{{AC-VHT20}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{2922.07}} & \multicolumn{1}{r|}{{2926.33}} & \multicolumn{1}{r|}{{2892.87}} & \multicolumn{1}{r|}{{2913.76}} \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{3200.00}} & \multicolumn{1}{r|}{{3249.00}} & \multicolumn{1}{r|}{{2919.00}} & \multicolumn{1}{r|}{{3122.67}} \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{140.00}}  & \multicolumn{1}{r|}{{140.00}}  & \multicolumn{1}{r|}{{140.00}}  & \multicolumn{1}{r|}{{140.00}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{409.09}}  & \multicolumn{1}{r|}{{409.69}}  & \multicolumn{1}{r|}{{405.00}}  & \multicolumn{1}{r|}{{407.93}}  \\ \cline{2-6} 
+{}                               & {}                                  & {}                             & {}                             & {}                             & {}                             \\ \hline
+\multicolumn{1}{|l|}{{AC-VHT40}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{2893.55}} & \multicolumn{1}{r|}{{2933.78}} & \multicolumn{1}{r|}{{2870.00}} & \multicolumn{1}{r|}{{2899.11}} \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{2907.00}} & \multicolumn{1}{r|}{{3115.00}} & \multicolumn{1}{r|}{{2870.00}} & \multicolumn{1}{r|}{{2964.00}} \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{100.00}}  & \multicolumn{1}{r|}{{80.00}}   & \multicolumn{1}{r|}{{90.00}}   & \multicolumn{1}{r|}{{90.00}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{289.35}}  & \multicolumn{1}{r|}{{234.70}}  & \multicolumn{1}{r|}{{258.30}}  & \multicolumn{1}{r|}{{260.79}}  \\ \cline{2-6} 
+{}                               & {}                                  & {}                             & {}                             & {}                             & {}                             \\ \hline
+\multicolumn{1}{|l|}{{AC-VHT80}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3139.00}} & \multicolumn{1}{r|}{{3127.00}} & \multicolumn{1}{r|}{{3237.00}} & \multicolumn{1}{r|}{{3167.67}} \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{3139.00}} & \multicolumn{1}{r|}{{3127.00}} & \multicolumn{1}{r|}{{3237.00}} & \multicolumn{1}{r|}{{3167.67}} \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{60.00}}   & \multicolumn{1}{r|}{{60.00}}   & \multicolumn{1}{r|}{{50.00}}   & \multicolumn{1}{r|}{{56.67}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{188.34}}  & \multicolumn{1}{r|}{{187.62}}  & \multicolumn{1}{r|}{{161.85}}  & \multicolumn{1}{r|}{{179.27}}  \\ \cline{2-6} 
+\end{tabular}
+\end{table}
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table.xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option. i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[H]
+\caption{Experiment results of 10MB text file and 5GHz}
+\begin{tabular}{llllll}
+{WiFi Standard}                  & {10MB file}                                  & {Run 1}                         & {Run 2}                         & {Run 3}                         & {Avg}                           \\ \hline
+\multicolumn{1}{|l|}{{A}}        & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3435.17}}  & \multicolumn{1}{r|}{{3334.95}}  & \multicolumn{1}{r|}{{3439.72}}  & \multicolumn{1}{r|}{{3403.28}}  \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{3846.00}}  & \multicolumn{1}{r|}{{3821.00}}  & \multicolumn{1}{r|}{{3833.00}}  & \multicolumn{1}{r|}{{3833.33}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{3190.00}}  & \multicolumn{1}{r|}{{3220.00}}  & \multicolumn{1}{r|}{{3200.00}}  & \multicolumn{1}{r|}{{3203.33}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{10958.19}} & \multicolumn{1}{r|}{{10738.55}} & \multicolumn{1}{r|}{{11007.11}} & \multicolumn{1}{r|}{{10901.28}} \\ \cline{2-6} 
+{}                               & {}                                  & {}                              & {}                              & {}                              & {}                              \\ \hline
+\multicolumn{1}{|l|}{{N5-HT20}}  & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3967.67}}  & \multicolumn{1}{r|}{{3956.11}}  & \multicolumn{1}{r|}{{3718.57}}  & \multicolumn{1}{r|}{{3880.79}}  \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4380.00}}  & \multicolumn{1}{r|}{{4062.00}}  & \multicolumn{1}{r|}{{4575.00}}  & \multicolumn{1}{r|}{{4339.00}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{1460.00}}  & \multicolumn{1}{r|}{{1420.00}}  & \multicolumn{1}{r|}{{1470.00}}  & \multicolumn{1}{r|}{{1450.00}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{5792.80}}  & \multicolumn{1}{r|}{{5617.68}}  & \multicolumn{1}{r|}{{5466.30}}  & \multicolumn{1}{r|}{{5625.59}}  \\ \cline{2-6} 
+{}                               & {}                                  & {}                              & {}                              & {}                              & {}                              \\ \hline
+\multicolumn{1}{|l|}{{N5-HT40}}  & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3975.74}}  & \multicolumn{1}{r|}{{3988.85}}  & \multicolumn{1}{r|}{{3610.85}}  & \multicolumn{1}{r|}{{3858.48}}  \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4196.00}}  & \multicolumn{1}{r|}{{4208.00}}  & \multicolumn{1}{r|}{{4196.00}}  & \multicolumn{1}{r|}{{4200.00}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{720.00}}   & \multicolumn{1}{r|}{{780.00}}   & \multicolumn{1}{r|}{{750.00}}   & \multicolumn{1}{r|}{{750.00}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{2862.53}}  & \multicolumn{1}{r|}{{3111.30}}  & \multicolumn{1}{r|}{{2708.14}}  & \multicolumn{1}{r|}{{2893.99}}  \\ \cline{2-6} 
+{}                               & {}                                  & {}                              & {}                              & {}                              & {}                              \\ \hline
+\multicolumn{1}{|l|}{{AC-VHT20}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3718.52}}  & \multicolumn{1}{r|}{{3438.01}}  & \multicolumn{1}{r|}{{3514.19}}  & \multicolumn{1}{r|}{{3556.91}}  \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4014.00}}  & \multicolumn{1}{r|}{{3554.00}}  & \multicolumn{1}{r|}{{4002.00}}  & \multicolumn{1}{r|}{{3856.67}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{1320.00}}  & \multicolumn{1}{r|}{{1370.00}}  & \multicolumn{1}{r|}{{1330.00}}  & \multicolumn{1}{r|}{{1340.00}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{4908.44}}  & \multicolumn{1}{r|}{{4710.08}}  & \multicolumn{1}{r|}{{4673.87}}  & \multicolumn{1}{r|}{{4764.13}}  \\ \cline{2-6} 
+{}                               & {}                                  & {}                              & {}                              & {}                              & {}                              \\ \hline
+\multicolumn{1}{|l|}{{AC-VHT40}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3563.18}}  & \multicolumn{1}{r|}{{3489.91}}  & \multicolumn{1}{r|}{{3829.32}}  & \multicolumn{1}{r|}{{3627.47}}  \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{3990.00}}  & \multicolumn{1}{r|}{{3652.00}}  & \multicolumn{1}{r|}{{4026.00}}  & \multicolumn{1}{r|}{{3889.33}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{660.00}}   & \multicolumn{1}{r|}{{660.00}}   & \multicolumn{1}{r|}{{670.00}}   & \multicolumn{1}{r|}{{663.33}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{2351.70}}  & \multicolumn{1}{r|}{{2303.34}}  & \multicolumn{1}{r|}{{2565.65}}  & \multicolumn{1}{r|}{{2406.90}}  \\ \cline{2-6} 
+{}                               & {}                                  & {}                              & {}                              & {}                              & {}                              \\ \hline
+\multicolumn{1}{|l|}{{AC-VHT80}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3431.31}}  & \multicolumn{1}{r|}{{3432.35}}  & \multicolumn{1}{r|}{{3465.24}}  & \multicolumn{1}{r|}{{3442.97}}  \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{3954.00}}  & \multicolumn{1}{r|}{{3905.00}}  & \multicolumn{1}{r|}{{3906.00}}  & \multicolumn{1}{r|}{{3921.67}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{280.00}}   & \multicolumn{1}{r|}{{300.00}}   & \multicolumn{1}{r|}{{320.00}}   & \multicolumn{1}{r|}{{300.00}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{960.77}}   & \multicolumn{1}{r|}{{1029.71}}  & \multicolumn{1}{r|}{{1108.88}}  & \multicolumn{1}{r|}{{1033.12}}  \\ \cline{2-6} 
+\end{tabular}
+\end{table}
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table.xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option. i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[H]
+\caption{Experiment results of 100MB text file and 5GHz}
+\begin{tabular}{llllll}
+{WiFi Standard}                  & {100MB file}                                  & {Run 1}                          & {Run 2}                          & {Run 3}                          & {Avg}                            \\ \hline
+\multicolumn{1}{|l|}{{A}}        & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3403.08}}   & \multicolumn{1}{r|}{{3425.99}}   & \multicolumn{1}{r|}{{3412.63}}   & \multicolumn{1}{r|}{{3413.90}}   \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{3846.00}}   & \multicolumn{1}{r|}{{3833.00}}   & \multicolumn{1}{r|}{{3845.00}}   & \multicolumn{1}{r|}{{3841.33}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{32840.00}}  & \multicolumn{1}{r|}{{31820.00}}  & \multicolumn{1}{r|}{{31830.00}}  & \multicolumn{1}{r|}{{32163.33}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{111757.17}} & \multicolumn{1}{r|}{{109014.97}} & \multicolumn{1}{r|}{{108623.86}} & \multicolumn{1}{r|}{{109798.67}} \\ \cline{2-6} 
+{}                               & {}                                  & {}                               & {}                               & {}                               & {}                               \\ \hline
+\multicolumn{1}{|l|}{{N5-HT20}}  & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{4147.20}}   & \multicolumn{1}{r|}{{4120.04}}   & \multicolumn{1}{r|}{{4117.07}}   & \multicolumn{1}{r|}{{4128.10}}   \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4611.00}}   & \multicolumn{1}{r|}{{4587.00}}   & \multicolumn{1}{r|}{{4599.00}}   & \multicolumn{1}{r|}{{4599.00}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{14360.00}}  & \multicolumn{1}{r|}{{14130.00}}  & \multicolumn{1}{r|}{{14600.00}}  & \multicolumn{1}{r|}{{14363.33}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{59553.83}}  & \multicolumn{1}{r|}{{58216.10}}  & \multicolumn{1}{r|}{{60109.29}}  & \multicolumn{1}{r|}{{59293.07}}  \\ \cline{2-6} 
+{}                               & {}                                  & {}                               & {}                               & {}                               & {}                               \\ \hline
+\multicolumn{1}{|l|}{{N5-HT40}}  & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{4247.52}}   & \multicolumn{1}{r|}{{4240.23}}   & \multicolumn{1}{r|}{{4246.24}}   & \multicolumn{1}{r|}{{4244.66}}   \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4624.00}}   & \multicolumn{1}{r|}{{4611.00}}   & \multicolumn{1}{r|}{{4624.00}}   & \multicolumn{1}{r|}{{4619.67}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{6990.00}}   & \multicolumn{1}{r|}{{7240.00}}   & \multicolumn{1}{r|}{{6980.00}}   & \multicolumn{1}{r|}{{7070.00}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{29690.15}}  & \multicolumn{1}{r|}{{30699.30}}  & \multicolumn{1}{r|}{{29638.77}}  & \multicolumn{1}{r|}{{30009.41}}  \\ \cline{2-6} 
+{}                               & {}                                  & {}                               & {}                               & {}                               & {}                               \\ \hline
+\multicolumn{1}{|l|}{{AC-VHT20}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3640.24}}   & \multicolumn{1}{r|}{{3592.81}}   & \multicolumn{1}{r|}{{3596.14}}   & \multicolumn{1}{r|}{{3609.73}}   \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4062.00}}   & \multicolumn{1}{r|}{{3990.00}}   & \multicolumn{1}{r|}{{4050.00}}   & \multicolumn{1}{r|}{{4034.00}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{13280.00}}  & \multicolumn{1}{r|}{{13230.00}}  & \multicolumn{1}{r|}{{13240.00}}  & \multicolumn{1}{r|}{{13250.00}}  \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{48342.35}}  & \multicolumn{1}{r|}{{47532.91}}  & \multicolumn{1}{r|}{{47612.85}}  & \multicolumn{1}{r|}{{47829.37}}  \\ \cline{2-6} 
+{}                               & {}                                  & {}                               & {}                               & {}                               & {}                               \\ \hline
+\multicolumn{1}{|l|}{{AC-VHT40}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3663.27}}   & \multicolumn{1}{r|}{{3715.93}}   & \multicolumn{1}{r|}{{3657.13}}   & \multicolumn{1}{r|}{{3678.78}}   \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4014.00}}   & \multicolumn{1}{r|}{{4026.00}}   & \multicolumn{1}{r|}{{4026.00}}   & \multicolumn{1}{r|}{{4022.00}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{6370.00}}   & \multicolumn{1}{r|}{{6350.00}}   & \multicolumn{1}{r|}{{6910.00}}   & \multicolumn{1}{r|}{{6543.33}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{23335.06}}  & \multicolumn{1}{r|}{{23596.17}}  & \multicolumn{1}{r|}{{25270.78}}  & \multicolumn{1}{r|}{{24067.34}}  \\ \cline{2-6} 
+{}                               & {}                                  & {}                               & {}                               & {}                               & {}                               \\ \hline
+\multicolumn{1}{|l|}{{AC-VHT80}} & \multicolumn{1}{l|}{{Avg (mW)}}     & \multicolumn{1}{r|}{{3916.16}}   & \multicolumn{1}{r|}{{3856.54}}   & \multicolumn{1}{r|}{{3845.20}}   & \multicolumn{1}{r|}{{3872.63}}   \\ \hline
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Highest (mW)}} & \multicolumn{1}{r|}{{4099.00}}   & \multicolumn{1}{r|}{{4087.00}}   & \multicolumn{1}{r|}{{4026.00}}   & \multicolumn{1}{r|}{{4070.67}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Time (ms)}}         & \multicolumn{1}{r|}{{3020.00}}   & \multicolumn{1}{r|}{{3060.00}}   & \multicolumn{1}{r|}{{3150.00}}   & \multicolumn{1}{r|}{{3076.67}}   \\ \cline{2-6} 
+\multicolumn{1}{l|}{{}}          & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{11826.81}}  & \multicolumn{1}{r|}{{11801.00}}  & \multicolumn{1}{r|}{{12112.38}}  & \multicolumn{1}{r|}{{11913.40}}  \\ \cline{2-6} 
+\end{tabular}
+\end{table}
+

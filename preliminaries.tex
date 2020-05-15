@@ -1,0 +1,98 @@
+\section{Background}\label{preliminaries}
+\begin{comment}
+This \emph{optional} chapter contains the stuff that your reader needs to know in order to understand
+your work.
+Your ``audience" consists of fellow third year computing science bachelor students who have done the same
+core courses as you have, but not necessarily the same specialization, minor, or free electives.
+
+
+\begin{itemize}
+\item Explain Wi-Fi
+\item a frequency-hopping spread-spectrum (FHSS)
+\end{itemize}
+\end{comment}
+
+
+\subsection{IEEE 802.11}
+In this chapter the important facets of the IEEE 802.11 protocol in combination with this paper will be explained.\\
+\\
+IEEE 802.11 is a set of medium access control (MAC) and physical layer (PHY) specification for wireless devices. Different versions exist, which can be seen in figure 
+
+
+\subsubsection{Network types}
+Two different network types exist, an independent network and an infrastructure network. An independent network or ad hoc network is the combination of a set of stations. An example can be see in figure \ref{fig:independent-network}, all mobile stations can communicate with each other. Each packet thus requires one hop. This type of network has a short lifespan, meaning that it is created and then utilized for a small period of time after which the network is dissolved. An infrastructure network is created out of:
+\begin{enumerate}
+    \item Mobile stations, these are laptops, phones or anything with an wireless network interface controller.
+    \item An access point, through which all traffic flows.
+\end{enumerate}
+Other than in an independent network, an infrastructure network's packets flow through the access point. The communication thus takes two hops. An example can be viewed in figure \ref{fig:infrastructure-network}. A benefit of an infrastructure network is that the mobile stations do not have to be in each others basic service area. A collection of these stations connected to an AP is called a basic service set (BSS). Within this paper we will only be using an infrastructure network as we will be looking more closely at the AP and its energy consumption. 
+
+
+\begin{figure}
+    \begin{minipage}[c]{0.4\linewidth}
+        \includegraphics[scale=0.8]{Images/preliminaries/independent-network.png}
+        \caption{Independent network example}
+        \label{fig:independent-network}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[c]{0.4\linewidth}
+        \includegraphics[scale=0.8]{Images/preliminaries/infrastructure-network.pdf}
+        \caption{Independent network example}
+        \label{fig:infrastructure-network}
+    \end{minipage}%
+\end{figure}
+
+
+\subsubsection{Frame types and their use}
+Within IEEE 802.11 multiple types of frames exist, the three most used frames are Data frames, control frames and management frames. These frames have different structure and uses. 
+
+\begin{enumerate}
+    \item Data frames - used to transmit data between stations and AP.
+    \item Management frames - used to provide authentication, connect and disconnect functionality to wireless networks.
+    \item Control frames - these frames help with the transmission of data. All control frames have the same 2 byte Frame Control field which is depicted in figure \ref{fig:bit-frame-control} A few different control frames exsist: 
+    \begin{enumerate}
+        \item RTS - Request To Send, a broadcasted request from a station signaling that it wants to transmit large data frames to the AP. A threshold is set for which data frame size a RTS should be sent. When granted with a CTS other stations will be silent. Creating a moment where collision is very unlikely.
+        \item CTS - Clear To Send, usually a response to a RTS. Giving that station the right of way to transmit large data frames.
+        \item ACK - Acknowledgement of received data.
+        \item PS-POLL - Power Save Poll, this frame is used by stations that have been in power saving mode. The station transmits this frame to the AP to retrieve possibly buffered frames while the station was in power saving mode. 
+    \end{enumerate}
+\end{enumerate}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.8]{Images/preliminaries/bit-Frame-control-diagram.pdf}
+    \caption{Frame control fields}
+    \label{fig:bit-frame-control}
+\end{figure}
+
+\subsection{Network authentication and association}\label{subsection:Network-AUTH-ASS}
+ADD LOOPS TO fig \ref{fig:wifi-auth-ass-states}\\
+EXPLAIN CLASSES (THE LOOPS)
+
+
+\subsubsection{Authentication}
+Two types of authentication exist:
+\begin{enumerate}
+    \item Open system
+    \item Shared key
+\end{enumerate}
+The open system is used in a WiFi network that is not (password) protected. The second type is a WiFi network that is protected using WEP, WPA or WPA2 usually with a pre-shared keys (PSK). The open system will be discussed as it is sufficient for this paper.
+The station starts at state one depicted in figure \ref{fig:wifi-auth-ass-states}. To connect a station to a WiFi network, the station must first authenticate itself to AP it wants to connect to. Because this is an open WiFi network the station does not need a PSK to authenticate. Thus the station sends an authentication request to the AP containing the stations ID which is usually the MAC address, the AP responds with an authentication response with a value of success or failure. When the AP returns success, the station knows that it is now in state two of figure \ref{fig:wifi-auth-ass-states}, the station is authenticated and can proceed to association.
+
+\subsubsection{Association}
+After authentication, the AP and station know each others identity and the station sends a simple association request. The way an AP decides when to allow a station to associate with the network is not written in stone within IEEE 802.11. When an AP decides the station will be allowed to associate, it sends an association response with the status code of success (0) and the Association ID (AID) for the station. This AID is used to identify the station when frames have been buffered while the stations was in power saving mode. When the station received this response it knows it is now in state 3. Meaning it can start to transfer data frames with the AP.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.8]{Images/preliminaries/wifi-auth-ass-states.pdf}
+    \caption{IEEE 802.11 authentication and association states}
+    \label{fig:wifi-auth-ass-states}
+\end{figure}
+
+\subsection{Power management}\label{section:PowerManagement}
+Book : Powersaving Sequences
+
+
+
+\subsection{IEEE 802.11 b/a/g/n/ac}
+
