@@ -13,6 +13,28 @@
 \usepackage{comment}
 \usepackage{float}
 
+
+
+\definecolor{BLUE}{RGB}{91,155,213}
+\definecolor{ORANGE}{RGB}{237,125,49}
+\usepackage{pgfplots}
+
+\newcommand{\dutchqed}{\qed}
+\newcommand{\dutchfill}{}
+\newcommand{\dutch}{
+	% Dutch style of paragraph formatting, i.e. no indents. 
+	\providecommand{\setparsizes}[3]{\setlength{\parskip}{##2}\setlength{\parindent}{##1}\renewcommand{\dutchqed}{\qed}}
+	\renewcommand{\dutchfill}{\\ \vspace{-\baselineskip}}
+	\renewcommand{\dutchqed}{\hfill \qed\dutchfill}
+	\setparsizes{0em}{.625\baselineskip plus .125\baselineskip minus .125\baselineskip}{2em plus 1fil}
+}
+
+\dutch
+
+
+\newcommand{\rpm}{\sbox0{$1$}\sbox2{$\scriptstyle\pm$}
+  \raise\dimexpr(\ht0-\ht2)/2\relax\box2 }
+
 \makeatletter %otherwise geometry resets everything
 \Gm@restore@org
 \makeatother
@@ -79,21 +101,18 @@
 \begin{minipage}[t]{0.45\textwidth}
 \begin{flushleft} \large
 \textit{Author:}\\
-Gunnar Noordbruis\\
+Gunnar P. Noordbruis\\
 s1008953
 \end{flushleft}
 \end{minipage}
 \begin{minipage}[t]{0.45\textwidth}
 \begin{flushright} \large
 \textit{First supervisor/assessor:}\\
-title, name\\
-\texttt{e-mail adress}\\[1.3cm]
-\textit{[Second supervisor:]}\\
-title, name\\
-\texttt{e-mail adress}\\[1.3cm]
+dr. B.E. (Bernard) van Gastel\\
+\texttt{B.vanGastel@cs.ru.nl}\\[1.3cm]
 \textit{Second assessor:}\\
-title, name\\
-\texttt{e-mail adress}
+prof. dr. M.C.J.D. van Eekelen\\
+\texttt{marko@cs.ru.nl}
 \end{flushright}
 \end{minipage}
 \vfill
@@ -102,15 +121,19 @@ title, name\\
 \end{titlepage}
 
 \input{abstract}
+\newpage
 
 \tableofcontents
 
 \input{introduction}
-\input{preliminaries}
+\newpage
+\input{background}
+\newpage
 \input{researchExperiment}
 \input{secondResearchPart}
 \input{relatedwork}
 \input{conclusions}
+\newpage
 
 \bibliographystyle{plain}
 \bibliography{bibliography}

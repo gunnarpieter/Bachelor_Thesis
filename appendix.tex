@@ -41,7 +41,7 @@ This paper will use the terms energy and power frequently. Energy is the cost to
 However for our AP it is not that simple. The problem is that it that the power or flow will not be as consistent. This means that very frequent measuring should take place to ensure that at the end of the performed work accurate energy calculations can be made.
 
 \section{Measurement code explained}\label{appendixB}
-Within this appendix we will explain the purpose of the code that is used to measure the amount of energy draw by the AP. The code can be found on GitLab\footnote{\url{https://gitlab.science.ru.nl/gnoordbruis/EnergyConsumption}}\newline 
+Within this appendix we will explain the ins and outs of the code that is used to measure the amount of energy draw by the AP using the voltage/current v2 bricklets API\cite{tinkerforgeAPI}. The code can be found on GitLab\footnote{\url{https://gitlab.science.ru.nl/gnoordbruis/EnergyConsumption}}\newline 
 \newline
 Within this program we use libcurl \cite{curl} to fetch the files from our server onto our query device. The code segments below are all code surrounding the retrieval of the file within the experiment and is mainly setting up curl and executing it.
 \begin{lstlisting}

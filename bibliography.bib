@@ -7,11 +7,103 @@
 %%  references. Consult http://www.bibtex.org/ for more information.
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% INTRODUCTION BIB
+
+@INPROCEEDINGS{6970705,
+author={R. {Riggio} and C. {Sengul} and L. {Suresh} and J. {Schulz–zander} and A. {Feldmann}},
+booktitle={2013 IEEE Conference on Computer Communications Workshops (INFOCOM WKSHPS)},
+title={Thor: Energy programmable WiFi networks},
+year={2013},
+volume={},
+number={},
+pages={21-22},
+doi={10.1109/INFCOMW.2013.6970705},
+ISSN={null},
+month={April},
+}
+
+@article{WAGH2015745,
+title = "Performance Evaluation of IEEE 802.15.4 Protocol Under Coexistence of WiFi 802.11b",
+journal = "Procedia Computer Science",
+volume = "57",
+pages = "745 - 751",
+year = "2015",
+note = "3rd International Conference on Recent Trends in Computing 2015 (ICRTC-2015)",
+issn = "1877-0509",
+doi = "https://doi.org/10.1016/j.procs.2015.07.467",
+url = "http://www.sciencedirect.com/science/article/pii/S1877050915019961",
+author = "Sharad S. Wagh and Avinash More and Prashant R. Kharote",
+}
+
+
+@article{VANHEDDEGHEM201464,
+title = "Trends in worldwide ICT electricity consumption from 2007 to 2012",
+journal = "Computer Communications",
+volume = "50",
+pages = "64 - 76",
+year = "2014",
+note = "Green Networking",
+issn = "0140-3664",
+doi = "https://doi.org/10.1016/j.comcom.2014.02.008",
+url = "http://www.sciencedirect.com/science/article/pii/S0140366414000619",
+author = "Ward Van Heddeghem and Sofie Lambert and Bart Lannoo and Didier Colle and Mario Pickavet and Piet Demeester",
+}
+
+@ARTICLE{5621967,
+author={K. {Christensen} and P. {Reviriego} and B. {Nordman} and M. {Bennett} and M. {Mostowfi} and J. A. {Maestro}},
+journal={IEEE Communications Magazine},
+title={IEEE 802.3az: the road to energy efficient ethernet},
+year={2010},
+volume={48},
+number={11},
+pages={50-56},
+doi={10.1109/MCOM.2010.5621967},
+ISSN={1558-1896},
+month={November},
+}
+
+
+@incollection{FARAHANI20081,
+title = "Chapter 1 - ZigBee Basics",
+editor = "Shahin Farahani",
+booktitle = "ZigBee Wireless Networks and Transceivers",
+publisher = "Newnes",
+address = "Burlington",
+pages = "1 - 24",
+year = "2008",
+isbn = "978-0-7506-8393-7",
+doi = "https://doi.org/10.1016/B978-0-7506-8393-7.00001-7",
+url = "http://www.sciencedirect.com/science/article/pii/B9780750683937000017",
+author = "Shahin Farahani",
+}
+
+% BACKGROUND / PRELIMINARIES
+@book{GuideWLAN,
+    title = {802.11 Wireless Networks The Definitive Guide},
+    author = {Matthew Gast},
+    year =  2005,
+    month = {04},
+    publisher = {O'Reilly}
+}
+
+@book{ATopDownApproach,
+ title = {Computer Networking A Top-Down Approach},
+ author = {James F. Kurose and Keith W. Ross},
+ year = 2016,
+ month = 11,
+ publisher = {Pearson Education Limited}
+ }
+
+
+
+% PAPER
 @misc{
     peys04:HowToWriteAGoodResearchPaper,
     author  = {{Peyton Jones}, Simon},
     title   = {How to write a good research paper},
-    date    = {october},
+    date    = {10},
     year    = 2004,
     note    = {Presentation at Technical University of Vienna, \url{http://research.microsoft.com/en-us/um/people/simonpj/papers/giving-a-talk/writing-a-paper-slides.pdf}}
 }
@@ -20,17 +112,25 @@
     title       = {http://en.wikipedia.org/wiki/Planet}
 }
 
-@misc{curl,
+@online{curl,
     author = {Daniel Stenberg},
     title = {\mbox{client URL}:curl},
     howpublished = {\url{https://curl.haxx.se/}}
 }
 
-@misc{tinkerforgeAPI,
-    author = {tinkerforge},
-    title = {tinkerforge C++ Voltage/Current Bricklet 2.0 API documentation},
+@online{tinkerforgeAPI,
+    author = {Tinkerforge},
+    title = {Tinkerforge C++ Voltage/Current Bricklet 2.0 API documentation},
     howpublished = {\url{https://www.tinkerforge.com/en/doc/Software/Bricklets/VoltageCurrentV2_Bricklet_C.html#voltage-current-v2-bricklet-c-api}}
 }
+
+@online{tinkerforgeVoltageCurrentDoc,
+    author = {Tinkerforge},
+    title = {Voltage/Current Bricklet 2.0},
+    howpublished = {\url{https://www.tinkerforge.com/en/doc/Hardware/Bricklets/Voltage_Current_V2.html}}
+
+}
+
 
 @misc{hwmodeHtmode,
     author = {OpenWRT},
@@ -40,34 +140,44 @@
 
 
 @misc{websiteSize,
-author = {Ilya Grigorik},
-title = {The "Average Page" is a myth},
-howpublished = {\url{https://www.igvita.com/2016/01/12/the-average-page-is-a-myth/}}
+    author = {Ilya Grigorik},
+    title = {The "Average Page" is a myth},
+    howpublished = {\url{https://www.igvita.com/2016/01/12/the-average-page-is-a-myth/}}
 }
 
 
 @INPROCEEDINGS{1460529, 
-author={S. -. {Wang} and Y. -. {Chen} and {Tsern-Huei Lee} and A. {Helmy}}, 
-booktitle={PCCC 2005. 24th IEEE International Performance, Computing, and Communications Conference, 2005.}, 
-title={Performance evaluations for hybrid IEEE 802.11b and 802.11g wireless networks}, 
-year={2005}, 
-volume={}, 
-number={}, 
-pages={111-118},
+    author={S. -. {Wang} and Y. -. {Chen} and {Tsern-Huei Lee} and A. {Helmy}}, 
+    booktitle={PCCC 2005. 24th IEEE International Performance, Computing, and Communications Conference, 2005.}, 
+    title={Performance evaluations for hybrid IEEE 802.11b and 802.11g wireless networks}, 
+    year={2005}, 
+    volume={}, 
+    number={}, 
+    pages={111-118},
 } 
 
 
 
+%29% bron in the introductie.
+@report{ClickClean2016,
+author = {Gary Cook and Jude Lee and Tamina Tsai and Ada Kong and John Deans and Brian Johnson and Elizabeth Jardim},
+year = {2017},
+month = {01},
+title = {clicking clean: who is winning the race to build a green internet?},
+publisher = {Greenpeace},
+}
+
+
 %FIXED ON OFF TIME
 @article{pscBatteryWLAN,
-author = {Ogawa, Masakatsu and Hiraguri, Takefumi and Nishimori, Kentaro and Honma, Naoki and Takaya, Kazuhiro and Murakawa, Kazuo},
-year = {2011},
-month = {03},
-pages = {658-666},
-title = {Power Saving Control Method for Battery-Powered Portable Wireless LAN Access Points in an Overlapping BSS Environment},
-volume = {94-B},
-journal = {IEICE Transactions},
-doi = {10.1587/transcom.E94.B.658}
+    author = {Ogawa, Masakatsu and Hiraguri, Takefumi and Nishimori, Kentaro and Honma, Naoki and Takaya, Kazuhiro and Murakawa, Kazuo},
+    year = {2011},
+    month = {03},
+    pages = {658-666},
+    title = {Power Saving Control Method for Battery-Powered Portable Wireless LAN Access Points in an Overlapping BSS Environment},
+    volume = {94-B},
+    journal = {IEICE Transactions},
+    doi = {10.1587/transcom.E94.B.658}
 }
 
 
@@ -104,11 +214,38 @@ doi = {10.1587/transcom.E94.B.658}
     pages={342-348},
 }
 
+% NETWORK USAGE:
+% https://ieeexplore-ieee-org.ru.idm.oclc.org/document/5401061
+@ARTICLE{5401061,
+  author={M. {Afanasyev} and T. {Chen} and G. M. {Voelker} and A. C. {Snoeren}},
+  journal={IEEE/ACM Transactions on Networking}, 
+  title={Usage Patterns in an Urban WiFi Network}, 
+  year={2010},
+  volume={18},
+  number={5},
+  pages={1359-1372},
+}
 
+% CBS huishoudens met internet
+% https://longreads.cbs.nl/ict-kennis-en-economie-2019/ict-gebruik-van-huishoudens-en-personen/
 
+@online{ICTUsageCBS,
+    author = {Judit Arends-Tóth},
+    title = {ICT-gebruik van huishoudens en personen},
+    publisher   = {Centraal Bureau voor de Statistiek},
+    howpublished = {\url{https://longreads.cbs.nl/ict-kennis-en-economie-2019/ict-gebruik-van-huishoudens-en-personen/}}
+}
 
-
-
+% TPC TIME
+@INPROCEEDINGS{1400406,
+  author={ {Youngsoo Kim} and  {Jeonggyun Yu} and  {Sunghyun Choi}},
+  booktitle={IEEE 60th Vehicular Technology Conference, 2004. VTC2004-Fall. 2004}, 
+  title={SP-TPC: a self-protective energy efficient communication strategy for IEEE 802.11 WLANs}, 
+  year={2004},
+  volume={3},
+  number={},
+  pages={2078-2082 Vol. 3},
+}
 
 
 
