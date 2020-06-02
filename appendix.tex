@@ -131,7 +131,7 @@ int main(void) {
 }\end{lstlisting}
 
 \section{Raw measurement results}\label{appendixC}
-\section{Experiment results 2.4Ghz}
+\subsection{Experiment results 2.4Ghz}
 %1MB:
 \begin{table}[H]
 \caption{Experiment results of 1MB text file and 2.5GHz}
@@ -212,7 +212,7 @@ int main(void) {
 \multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{38716.72}}  & \multicolumn{1}{r|}{{38340.14}}  & \multicolumn{1}{r|}{{38445.65}}  & \multicolumn{1}{r|}{{38500.84}}  \\ \cline{2-6} 
 \end{tabular}
 \end{table}
-\section{Experiment results 5Ghz}
+\subsection{Experiment results 5Ghz}
 \begin{table}[H]
 \caption{Experiment results of 1MB text file and 5GHz}
 \begin{tabular}{llllll}
@@ -327,3 +327,48 @@ int main(void) {
 \end{tabular}
 \end{table}
 
+\section{Calculation of access point energy consumption per month}
+\begin{table}[H]
+\caption{Total number of Whs consumed by an AP per month using the weighted amount of data consumed in 1Q19. sending 10MB chunks (Europe: 175.7GB per month)\cite{OpenVaultReport2019} }
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllllll}
+\hline\hline
+       &          & \parbox[t]{2cm}{ Wh Wifi \\ transmitting} & Wh WiFi idle & Wh WiFi off & Wh total idle & Wh total off \\
+2.4GHz & B        & 108.90               & 1550.00      & 1506.72     & 1658.90    & 1615.62   \\ \hline
+       & G        & 68.83                & 1572.30      & 1534.27     & 1641.13    & 1603.09   \\ \cline{2-7} 
+       & N2-HT20  & 35.04                & 1599.30      & 1553.08     & 1634.34    & 1588.13   \\ \cline{2-7} 
+       & N2-HT40  & 16.94                & 1635.75      & 1562.58     & 1652.69    & 1579.52   \\
+       &          &                      &              &             &            &           \\
+5GHz   & A        & 53.20                & 1718.08      & 1538.72     & 1771.29    & 1591.92   \\ \cline{2-7} 
+       & N5-HT20  & 27.46                & 1734.79      & 1557.15     & 1762.25    & 1584.61   \\ \cline{2-7} 
+       & N5-HT40  & 14.12                & 2122.30      & 1564.51     & 2136.42    & 1578.63   \\ \cline{2-7} 
+       & AC-VHT20 & 23.25                & 2062.25      & 1558.31     & 2085.50    & 1581.56   \\ \cline{2-7} 
+       & AC-VHT40 & 11.75                & 2121.04      & 1565.42     & 2132.78    & 1577.17   \\ \cline{2-7} 
+       & AC-VHT80 & 5.04                 & 2307.08      & 1569.24     & 2312.12    & 1574.28   \\ \cline{2-7} 
+\end{tabular}%
+}
+\end{table}
+
+
+\begin{table}[H]
+\caption{Total number of Whs consumed by an AP per month using the weighted amount of data consumed in 1Q19. sending 1MB chunks (Europe: 175.7GB per month)\cite{OpenVaultReport2019} }
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllllll}
+\hline\hline
+       &          & \parbox[t]{2cm}{ Wh Wifi \\ transmitting} & Wh WiFi idle & Wh WiFi off & Wh total idle & Wh total off \\
+2.4GHz & B        & 105.17               & 1546.90      & 1503.71     & 1652.07    & 1608.88   \\ \hline
+       & G        & 69.30                & 1568.28      & 1530.34     & 1637.58    & 1599.65   \\ \cline{2-7} 
+       & N2-HT20  & 27.35                & 1598.25      & 1552.07     & 1625.60    & 1579.42   \\ \cline{2-7} 
+       & N2-HT40  & 16.13                & 1633.18      & 1560.13     & 1649.31    & 1576.26   \\
+       &          &                      &              &             &            &           \\
+5GHz   & A        & 50.16                & 1716.56      & 1537.35     & 1766.72    & 1587.51   \\ \cline{2-7} 
+       & N5-HT20  & 29.42                & 1731.86      & 1554.52     & 1761.28    & 1583.94   \\ \cline{2-7} 
+       & N5-HT40  & 14.13                & 2120.63      & 1563.28     & 2134.76    & 1577.41   \\ \cline{2-7} 
+       & AC-VHT20 & 19.91                & 2061.42      & 1557.68     & 2081.33    & 1577.58   \\ \cline{2-7} 
+       & AC-VHT40 & 12.73                & 2117.67      & 1562.93     & 2130.39    & 1575.66   \\ \cline{2-7} 
+       & AC-VHT80 & 8.75                 & 2302.96      & 1566.44     & 2311.71    & 1575.19   \\ \cline{2-7}  
+\end{tabular}%
+}
+\end{table}
