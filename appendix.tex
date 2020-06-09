@@ -1,4 +1,5 @@
-\section{General}\label{appendixA}
+\chapter{Appendix}\label{appendix}
+% \section{General}\label{appendixA}
 Appendices are \emph{optional} chapters in which you cover additional material that is required to support your
 hypothesis, experiments, measurements, conclusions, etc. that would otherwise
 clutter the presentation of your research.
@@ -36,11 +37,11 @@ config wifi-device 'radio0'
 ...
 \end{lstlisting}
 
-\section{Energy and power the difference}
+\chapter{Energy and power the difference}
 This paper will use the terms energy and power frequently. Energy is the cost to perform work or do something whereas power is the rate of energy per unit of time. Within this paper the amount of energy that it took the AP to perform a certain task will be measured. Because not everyone might be familiar with energy and power their meaning will be explained in a simple example, Lets compare an electricity cable with a water pipe. Through this water pipe flows 1 liter of water per second. This can be compared to power. As power is how much water flows through the pipe per unit of time. Energy is how much water has flowed through the pipe, for this we need to know how long the water has flown through the pipe. Say that this was 1 minute (60s), then $60s \cdot 1l/s= 60$ liters would have come out of the end of the pipe.\\
 However for our AP it is not that simple. The problem is that it that the power or flow will not be as consistent. This means that very frequent measuring should take place to ensure that at the end of the performed work accurate energy calculations can be made.
 
-\section{Measurement code explained}\label{appendixB}
+\chapter{Measurement code explained}\label{appendixB}
 Within this appendix we will explain the ins and outs of the code that is used to measure the amount of energy draw by the AP using the voltage/current v2 bricklets API\cite{tinkerforgeAPI}. The code can be found on GitLab\footnote{\url{https://gitlab.science.ru.nl/gnoordbruis/EnergyConsumption}}\newline 
 \newline
 Within this program we use libcurl \cite{curl} to fetch the files from our server onto our query device. The code segments below are all code surrounding the retrieval of the file within the experiment and is mainly setting up curl and executing it.
@@ -141,8 +142,8 @@ void idle(){
 	}
 }
 \end{lstlisting}
-\section{Raw measurement results}\label{appendixC}
-\subsection{Experiment results 2.4Ghz}
+\chapter{Raw measurement results}\label{appendixC}
+\section{Experiment results 2.4Ghz}
 %1MB:
 \begin{table}[H]
 \caption{Experiment results of 1MB text file and 2.5GHz}
@@ -223,7 +224,8 @@ void idle(){
 \multicolumn{1}{l|}{{}}         & \multicolumn{1}{l|}{{Energy (J)}}   & \multicolumn{1}{r|}{{38716.72}}  & \multicolumn{1}{r|}{{38340.14}}  & \multicolumn{1}{r|}{{38445.65}}  & \multicolumn{1}{r|}{{38500.84}}  \\ \cline{2-6} 
 \end{tabular}
 \end{table}
-\subsection{Experiment results 5Ghz}
+
+\section{Experiment results 5Ghz}
 \begin{table}[H]
 \caption{Experiment results of 1MB text file and 5GHz}
 \begin{tabular}{llllll}
@@ -338,7 +340,7 @@ void idle(){
 \end{tabular}
 \end{table}
 
-\section{Calculation of access point energy consumption per month}
+\chapter{Calculation of access point energy consumption per month}
 \begin{table}[H]
 \caption{Total number of Whs consumed by an AP per month using the weighted amount of data consumed in 1Q19. sending 10MB chunks (Europe: 175.7GB per month)\cite{OpenVaultReport2019} }
 \centering

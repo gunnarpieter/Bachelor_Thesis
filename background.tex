@@ -1,4 +1,4 @@
-\section{Background IEEE 802.11}\label{preliminaries}
+\chapter{Background IEEE 802.11}\label{preliminaries}
 \begin{comment}
 This \emph{optional} chapter contains the stuff that your reader needs to know in order to understand
 your work.
@@ -18,7 +18,7 @@ by James F. Kurose and Keith W. Ross \cite{?,GuideWLAN,ATopDownApproach}\todo{in
 IEEE 802.11 is a set of medium access control (MAC) and physical layer (PHY) specification for wireless devices. Different versions exist, which can be seen in figure 
 
 
-\subsection{Network types}
+\section{Network types}
 Two different network types exist, an independent network and an infrastructure network. An independent network or ad hoc network is the combination of a set of stations. An example can be see in figure \ref{fig:independent-network}, all mobile stations can communicate with each other. Each packet thus requires one hop. This type of network has a short lifespan, meaning that it is created and then utilized for a small period of time after which the network is dissolved. An infrastructure network is created out of:
 \begin{enumerate}
     \item Mobile stations, these are laptops, phones or anything with an wireless network interface controller.
@@ -42,7 +42,7 @@ Other than in an independent network, an infrastructure network's packets flow t
 \end{figure}
 
 
-\subsection{Frame types and their use}
+\section{Frame types and their use}
 Within IEEE 802.11 multiple types of frames exist, the three most used frames are Data frames, control frames and management frames. These frames have different structure and uses. 
 
 \begin{enumerate}
@@ -64,7 +64,7 @@ Within IEEE 802.11 multiple types of frames exist, the three most used frames ar
     \label{fig:bit-frame-control}
 \end{figure}
 
-\subsection{Network authentication and association}\label{subsection:Network-AUTH-ASS}
+\section{Network authentication and association}\label{subsection:Network-AUTH-ASS}
 \todo{ADD LOOPS TO fig \ref{fig:wifi-auth-ass-states}\\}
 \todo{EXPLAIN CLASSES (THE LOOPS)}
 
@@ -89,7 +89,7 @@ When the station received this response it knows it is now in state 3. Meaning i
     \label{fig:wifi-auth-ass-states}
 \end{figure}
 
-\subsection{Power conservation}\label{section:PowerManagement}
+\section{Power conservation}\label{section:PowerManagement}
 Power management is currently implemented in such a way that it heavily utilizes the access point. When a station decides it wants to sleep or enter Power Saving mode (PS) it indicates this to the AP. 
 The AP performs two tasks to provide the stations with PS capability, the first is buffering the frames that arrive for a station that is currently sleeping. 
 Secondly, within the beacon the AP broadcasts periodically, the AP includes the stations AID for which it has buffered frames. 
@@ -100,7 +100,7 @@ Transmitting a signal costs energy, if a signal can reaches further than what it
 TPC was not intended to be used to conserve power but the papers \cite{6983074} and \cite{1400406} both use this feature to reduce the energy consumption.
 
 
-\subsection{WiFi standards b/a/g/n/ac}
+\section{WiFi standards b/a/g/n/ac}
 \todo{Should footnotes be citations?}
 The first WiFi version became available to consumers in 1997 it was called IEEE 802.11. Over time the standard received updates, usually becoming faster as the original IEEE 802.11 supported only speeds of up to 2Mbp/s. These updates are called amendments and the first two amendments were both released in 1999, IEEE 802.11b IEEE 802.11a. IEEE 802.11b uses a 2.4GHz frequency and has a theoretical limit of 11Mbp/s, IEEE 802.11b does not bring new features to the WiFi family, it is merely an update of the first standard. IEEE 802.11a on the other hand brought orthogonal frequency division multiplexing (OFDM) to the table. Next to this, IEEE 802.11a operates on the 5GHz frequency band allowing a max theoretical max throughput of 54 Mbp/s.\newline
 In 2003 faster 2.4GHz standard was released, IEEE 802.11g. IEEE wanted "to combine the best of both 802.11a and 802.11b" \footnote{\url{https://www.lifewire.com/wireless-standards-802-11a-802-11b-g-n-and-802-11ac-816553}}. That is why, 802.11g is backwards compatible with IEEE 802.11b and also implements OFDM achieving a theoretical max throughput of 54Mbp/s. The 2.4GHz devices are cheaper to manufacture\footnote{https://alethea.in/iot-age-wifi-6/} compared to 5GHz.

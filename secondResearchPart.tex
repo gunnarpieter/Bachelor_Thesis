@@ -1,4 +1,4 @@
-\section{Potential energy conservation}\label{research2}
+\chapter{Potential energy conservation}\label{research2}
 % This chapter, or series of chapters, delves into all technical details that are
 % required to \emph{prove} your scientific hypothesis.
 % It should be sufficiently detailed and precise in order for any fellow computing scientist student to be able to \emph{repeat}
@@ -8,7 +8,7 @@
 \todo{Add text here}
 
 In this chapter we will be looking at dynamically switching and statically switching.
-\subsection{A single energy efficient standard}\label{MostEnergyEffStandard}
+\section{A single energy efficient standard}\label{MostEnergyEffStandard}
 In this section the energy consumption of an access point using only one standard will be calculated and analysed.\\
 This will be done using the results from the experiment in section \ref{researchExperiment}. The energy consumption of an access point can be calculated using the amount of data that needs to be transferred. 
 The weighted amount of data transferred in Europe is 175.7GB per month \cite{OpenVaultReport2019}. 
@@ -45,19 +45,19 @@ When idling the energy consumption of this standard is the highest of all standa
 
 
 
-\subsection{Switching}\label{section:SwitchingDynamically}
+\section{Switching}\label{section:SwitchingDynamically}
 \paragraph{Dynamically switching} between the different WiFi standards, means that the AP would choose a older/slower WiFi standard than the standard the AP has currently selected to operate on and switch to that standard when the AP is not actively used by the connected stations. Next to this, as the demand for more and faster data transmission rises that the AP if possible choose a newer/faster WiFi standard. 
 The goal of dynamically switching is to decrease the energy consumption by the AP and at the same time maintain usability and user comfort. 
 The switch frequency, the number of switches that the AP can make in a certain time period, is not defined. This is because if a switch is performed when the network is in use it will disturb the usability of the network and user comfort.
 
 \paragraph{Statically switching} is a much simpler variant of switching where the switches happen on specific times. This can for example be setup to be at night when speed requirements drop or switching from an older/slower standard to a newer/faster standard when you are bound to be home.
 
-\subsubsection{Drawbacks switching}
+\subsection{Drawbacks switching}
 Dynamically switching or statically switching has a few drawbacks compared to operating without WiFi standard restrictions. 
 The most prominent drawbacks are when such a switch occurs the AP can not send or receive data as the AP has to (partially) reboot and due to that the stations will have to go through the steps explained in section \ref{subsection:Network-AUTH-ASS} to re-authenticate and re-associate with the network. Next to this, if the WiFi network is password protected a key exchange must occur. For the experiment done in chapter \ref{researchExperiment} a few dozen of these switches have been performed manually.
 These switches took anywhere from 10 to 30 seconds. 
 
-\subsubsection{Outcome}
+\subsection{Outcome}
 The results from the experiment performed in section \ref{researchExperiment} have shown that older WiFi standards consume more energy when transmitting but less energy when idling. This means that either dynamically or statically switching, can lead to a reduction in the energy consumption of the access point.\newline
 This reduction should be found not when transmitting data but when the WiFi point is idling. Because then the extra time the older WiFi standards take to transmit, will vanquish the small amount of power draw difference seen in figure \ref{fig:results-100mb-power}. However, figure \ref{fig:results-idle-power} shows a significant power draw difference when idling. Next to this, it is apparent from figure \ref{fig:results-idle-power} that it does not truly matter to which older standard one switches.
 Just that the switch should be between 2.4GHz and 5GHz. Table \ref{table:EnergyConsAPPerDay} shows that switching to IEEE 802.11g results in similar power reduction when compared to n2-HT20. Next to this, when a switch is made to the IEEE 802.11 b or g standard the user will see significant reduction in user comfort purely due to lower transfer speeds compared to IEEE 802.11n on a 2.4GHz frequency. \newline

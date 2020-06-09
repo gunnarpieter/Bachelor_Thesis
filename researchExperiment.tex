@@ -4,7 +4,7 @@
 
 
 
-\section{Measuring energy consumption of WiFi standards}\label{researchExperiment}
+\chapter{Measuring energy consumption of WiFi standards}\label{researchExperiment}
 \begin{comment}
 This chapter, or series of chapters, delves into all technical details that are
 required to \emph{prove} your scientific hypothesis.
@@ -19,7 +19,7 @@ In  this  chapter, the measurement methodology that is used to measure the power
 \\
 The goal is to reduce the energy consumption of a wireless access point by switching between WiFi standards. To determine if this solution will be effective, the energy consumption of the different WiFi standards must be measured. This will be done using an experiment where we will measure the energy consumption of each WiFi standard when retrieving a hosted file.
 
-\subsection{Methodology energy consumption measurements}\label{powerConsumptionMeasurement}
+\section{Methodology energy consumption measurements}\label{powerConsumptionMeasurement}
 
 \todo{Add that the text file that was used consists of }
 \todo{add That this experiment measures the energy consumption of sending not idle }
@@ -64,7 +64,7 @@ The setup in figure \ref{fig:experiment-setup} consist of a few basic components
     \item During the measurement of the idle power draw an empty while loop would stop looping before achieving a false boolean value. The value in this case was the number of measurements taken. Causing the measurements to never stop. This was solved by printing the progress of the measurements.
 \end{itemize}
 
-\subsection{Results}
+\section{Results}
 In this section, the results from the energy consumption experiments outlined in section \ref{powerConsumptionMeasurement} are presented and examined in detail. The effects of the different WiFi standards on the energy consumption of the AP are explained, and various implications for design are discussed. The raw data can be found in appendix \ref{appendixC}.\newline
 \newline
 We tested every WiFi standard with 3 different files. The WiFi standards are categorized into two groups. Namely, 2.4GHz(blue) and 5GHz(orange) and arranged from old(left) to new(right). The average energy consumption of the 100MB transfer can be found in figure \ref{fig:results-100mb-energy}. Next to this, we have the average time \ref{fig:results-100mb-time} the transfer took and the average power consumption\ref{fig:results-100mb-power}. Only the 100MB test results are shown below, because the energy consumption and time results of the 1 and 10MB test have a very similar pattern. Displaying those results here too, would not contribute new information. Next to this, the power results of the 1 and 10 MB test are not shown here. This is due to the fact that the 100MB test is more accurate due to the higher number of samples that were taken during the test. Each sample has a smaller affect on the average.\newline
