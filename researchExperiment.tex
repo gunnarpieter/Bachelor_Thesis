@@ -42,11 +42,11 @@ For the idle power consumption test 1 minute of power consumption was measured 3
     \caption{Setup of test network}
     \label{fig:experiment-setup}
 \end{figure}
-\todo{I have performed extra measurement of the idle energy consumption of the WiFi standards}
-Hoe heb ik dat onderzoek gedaan?
-En waarom? \\
-    Om een goede berekening te maken van het daadwerkelijke energy verbruik van het AP over tijd.
-\\
+% \todo{I have performed extra measurement of the idle energy consumption of the WiFi standards}
+% Hoe heb ik dat onderzoek gedaan?
+% En waarom? \\
+%     Om een goede berekening te maken van het daadwerkelijke energy verbruik van het AP over tijd.
+% \\
 The setup in figure \ref{fig:experiment-setup} consist of a few basic components:
 \begin{enumerate}
     \item Query Device - This is WiFi capable laptop of up to IEEE 802.11ac
@@ -56,11 +56,12 @@ The setup in figure \ref{fig:experiment-setup} consist of a few basic components
     \item Ina 226 voltage current bricklet - this device measures the power consumption of the Access Point. It is controlled by a Master Brick v2.1
 \end{enumerate}
 
-\paragraph{Measurement issues} occurred during the experiment though the measurements went reasonably smooth.
+\paragraph{Measurement issues}\label{MeasurementIssues} occurred during the experiment though the measurements went reasonably smooth.
 \begin{itemize}
     \item In one instance the retrieval of the file over the WiFi standard 'b' crashed. The cause of the problem is unknown but was not encountered again in later retrievals.
     \item On several occasions the AP did not ad hear to the set parameters. This issues was solved by either rebooting or factory resetting and reapplying the settings if rebooting did not work.
     \item When sequentially doing the same test the Tinkerforge voltage/current v2 bricklet would not start or end measurement accurately. The retrieval time would doubled with every run. The cause of this is unknown but we suspect it has to do with code optimization. Next to this, it could easily be avoided by altering the program to through out the execution phase of the program only perform one test. This gave more consistent results.
+    \item During the measurement of the idle power draw an empty while loop would stop looping before achieving a false boolean value. The value in this case was the number of measurements taken. Causing the measurements to never stop. This was solved by printing the progress of the measurements.
 \end{itemize}
 
 \subsection{Results}

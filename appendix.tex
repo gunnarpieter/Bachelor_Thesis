@@ -130,6 +130,17 @@ int main(void) {
     return 0;
 }\end{lstlisting}
 
+The idle power consumption of the access point has also been measured in section \ref{researchExperiment}. The Voltage current bricklet calls the callback function every 10ms. One second is 1000ms thus we need a 100 measurements to have the results of 1 second. This while loop prints the progress this is due to a problem mentioned in section \ref{MeasurementIssues} 
+\begin{lstlisting}
+void idle(){
+    int second = 100;
+    int minute = 6000;
+
+	while (dataVector.size() <= (minute)) {  
+		cout <<  "Size: " << dataVector.size() << " needed size: " << minute << "\n";
+	}
+}
+\end{lstlisting}
 \section{Raw measurement results}\label{appendixC}
 \subsection{Experiment results 2.4Ghz}
 %1MB:

@@ -1,40 +1,40 @@
 \section{Conclusions}\label{conclusions}
-In this chapter you present all conclusions that can be drawn from the
-preceding chapters.
-It should not introduce new experiments, theories, investigations, etc.:
-these should have been written down earlier in the thesis.
-Therefore, conclusions can be brief and to the point.
+% In this chapter you present all conclusions that can be drawn from the
+% preceding chapters.
+% It should not introduce new experiments, theories, investigations, etc.:
+% these should have been written down earlier in the thesis.
+% Therefore, conclusions can be brief and to the point.
 
 
 
 This thesis conducted an experiment into the energy consumption of the IEEE 802.11 WiFi standards b/a/g/n/ac. 
-Next to this, it looked more closely at switching dynamically between these standards as a way of saving energy and applying the knowledge gained about the standards in an effective manner. 
+Next to this, it looked more closely at switching between these standards as a way of saving energy and applying the knowledge gained about the standards in an effective manner. 
 \newline
 \newline
-Voor eerste sub vraag (a):
-We can see that the older WiFi standards actually use more energy when transmitting the same file in combination with the more time it took the older WiFi standards to transmit the text file.  Interestingly, on the 100MB file test it is visible that the aver-age power consumption of the oldest standards (b/a) is lower compared to the other standards.
+In section \ref{researchExperiment} the information to answer the question 'What is the energy consumption of each WiFi standard?' was gathered. This resulted in several interesting findings. Specifically that, the power consumption of the older standards is indeed lower than the newer versions. However, due to those standards being slower more energy will be consumed when transmitting the same file. On the contrary, the idle power draw of the older standards is lower or equal to the newest standard in 2.4GHz and 5GHz.\newline
+\newline
+There is a specific WiFi standard that consumes the least amount of energy shown in table \ref{table:EnergyConAP}. This is the 802.11n standard using a 20MHz bandwidth. However, all 2.4GHz WiFi networks consume a very similar amount of energy while idling (column: Wh total idle). However, the calculations of the total energy consumption when idling means that the WiFi network is off, the newest 802.11ac with a 80MHz bandwidth standard becomes the most energy efficient standard. When idling the energy consumption of this standard is relatively high. Next to this, its fast transmissions creates an environment where the AP can be off/in sleep for a longer time. In the end this indicates that achieving lower idle power consumption either by switching to a WiFi standard with lower idle consumption or using wake/sleep (on/off) cycles are a good options.
 \newline
 \newline
-(b i): 
-The results from the experiment performed in section 3 have shown that dynamically switching, will not lead to a reduction in the energy consumption of the access point but to an increase due to the extra time it takes for the data to be transferred which vanquishes the small amount of power draw difference.
+%(b ii): 
+The results described in section \ref{section:SwitchingDynamically} show that dynamically/statically switching can lead to a reduction in the energy consumption of roughly 23\% of an access point. 
+However, a key point is that the reduction will not come from less energy consumption during transmission of data but from the difference in idling power draw of each WiFi standard. 
+Next to this, it is apparent that the switch should also not be between old and new but 2.4GHz and 5GHz. 
+This can be concluded from table \ref{table:MonthEnergyCons} where the percentage of energy conserved by the switch to 802.11g is lower but close to the same switch but then to 802.11n with a 20MHz bandwidth. 
+Next to this, the transmission time of the data almost doubles between these different standards. Impacting user comfort and the usability of the WiFi network.\newline
 \newline
-\newline
-(b ii):
-Moet nog geschreven worden. Komt uiteindelijk een conclusie hoeveel procent de ene zuiniger is dan de andere. en hoeveel tijd er in idle/slaap gespendeerd kan worden.
-\newline
-\newline
-(b): Dit moet ook nog geschreven worden maar er moet in \ref{EfficientWiFi} bij b ii ook iets komen dat de nieuwste standaard sneller is en dat dit er dus voor zorgt dat dynamische algoritmen (1 paper besproken in related work) meer profijt kan hebben door dan langer te slapen.
+In this thesis it has been shown that a dynamic/static switching method can help to reduce the energy consumption of an access point. Next to this, the results in this paper support the solution of utilizing a wake/sleep cycle which has been applied in papers \cite{6983074,4489442,pscBatteryWLAN,7502830}. 
 
-\begin{enumerate}
-    \item Welke mogelijkheden zijn er om een Access Point energiezuinger te laten functioner met gebruik van de WiFi standaarden?
-     \begin{enumerate}
-        \item Wat is het energieverbruik van elke WiFi standaard?
-        \item Welke toepassingsmogelijkheden van WiFi standaarden sluiten aan bij een besparing van energie?
-            \begin{enumerate}
-                \item Kan dynamisch switchen tussen WiFi standaarden energie besparen?
-                \item Welke WiFi standard is het meest efficient qua energie verbruik?
-            \end{enumerate}
-    \end{enumerate}
-\end{enumerate}
+% \begin{enumerate}
+%     \item Welke mogelijkheden zijn er om een Access Point energiezuinger te laten functioner met gebruik van de WiFi standaarden?
+%      \begin{enumerate}
+%         \item Wat is het energieverbruik van elke WiFi standaard?
+%         \item Welke toepassingsmogelijkheden van WiFi standaarden sluiten aan bij een besparing van energie?
+%             \begin{enumerate}
+%                 \item Welke WiFi standard is het meest efficient qua energie verbruik?
+%                 \item Kan dynamisch switchen tussen WiFi standaarden energie besparen?
+%             \end{enumerate}
+%     \end{enumerate}
+% \end{enumerate}
 
 \subsection{Future work}
