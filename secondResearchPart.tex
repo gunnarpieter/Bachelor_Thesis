@@ -13,15 +13,17 @@ In this section the energy consumption of an access point using only one standar
 This will be done using the results from the experiment in section \ref{researchExperiment}. The energy consumption of an access point can be calculated using the amount of data that needs to be transferred. 
 The weighted amount of data transferred in Europe is 175.7GB per month \cite{OpenVaultReport2019}. 
 %Europe has decreased ethernet usage but seems to have the same growth compared to the U.S.A where the weighted average is 273.5 
-In table \ref{table:EnergyConAP} the energy consumption of a month of an AP has been calculated with the access point idling with WiFi on and with WiFi off. 
-Very visible is that the newer standards end up consuming more energy due to higher idling energy consumption. This difference is eliminated when idling means that the WiFi network is off.
+In table \ref{table:EnergyConAP} the energy consumption of a month of an AP has been calculated with the access point idling with WiFi on and with WiFi off using 100mb transmit sizes. 
+The consumption when using the 1 and 10mb transmit sizes have also been calculated and provide identical results. These tables can be found in appendix \ref{StandardAPpowerconsumption}.
+Very visible is that the newer standards end up consuming more energy due to higher idling energy consumption. This difference is eliminated when the AP is turned off if not in use instead of idling.
 
 \begin{table}[H]
 \caption{Total number of Whs consumed by an AP per month using the weighted amount of data consumed in 1Q19, sending 100MB chunks }
+\label{table:EnergyConAP}
 \centering
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{llllllll}
-\label{table:EnergyConAP}
+
        &Wifi standard & \parbox[t]{2cm}{ Wh Wifi \\ transmitting} & Wh WiFi idle & Wh WiFi off & Wh total idle & Wh total off & 
        \begin{tabular}[c]{@{}l@{}}Total transmitting\\ time (min)\end{tabular}
         \\\hline\hline
@@ -57,7 +59,7 @@ Dynamically switching or statically switching has a few drawbacks compared to op
 The most prominent drawbacks are when such a switch occurs the AP can not send or receive data as the AP has to (partially) reboot and due to that the stations will have to go through the steps explained in section \ref{subsection:Network-AUTH-ASS} to re-authenticate and re-associate with the network. Next to this, if the WiFi network is password protected a key exchange must occur. For the experiment done in chapter \ref{researchExperiment} a few dozen of these switches have been performed manually.
 These switches took anywhere from 10 to 30 seconds. 
 
-\subsection{Outcome}
+\subsection{Outcome}\label{outcomeSwitching}
 The results from the experiment performed in section \ref{researchExperiment} have shown that older WiFi standards consume more energy when transmitting but less energy when idling. This means that either dynamically or statically switching, can lead to a reduction in the energy consumption of the access point.\newline
 This reduction should be found not when transmitting data but when the WiFi point is idling. Because then the extra time the older WiFi standards take to transmit, will vanquish the small amount of power draw difference seen in figure \ref{fig:results-100mb-power}. However, figure \ref{fig:results-idle-power} shows a significant power draw difference when idling. Next to this, it is apparent from figure \ref{fig:results-idle-power} that it does not truly matter to which older standard one switches.
 Just that the switch should be between 2.4GHz and 5GHz. Table \ref{table:EnergyConsAPPerDay} shows that switching to IEEE 802.11g results in similar power reduction when compared to n2-HT20. Next to this, when a switch is made to the IEEE 802.11 b or g standard the user will see significant reduction in user comfort purely due to lower transfer speeds compared to IEEE 802.11n on a 2.4GHz frequency. \newline

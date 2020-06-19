@@ -7,13 +7,16 @@
 
 
 
-This thesis conducted an experiment into the energy consumption of the IEEE 802.11 WiFi standards b/a/g/n/ac. 
-Next to this, it looked more closely at switching between these standards as a way of saving energy and applying the knowledge gained about the standards in an effective manner. 
+This thesis conducted an experiment into the energy consumption of the IEEE 802.11 WiFi standards b/a/g/n/ac on an Archer AC1750 access point. 
+Several measurements have been performed to achieve this, namely a file transfer using a 1, 10 and 100mb file and an idle measurement. Every measurement has been performed in a low-radiation environment. Meaning no presence of cellular signal or other WiFi networks.
+Next to this, it looked more closely at switching between these standards as a way of saving energy and applying the knowledge gained about the standards in an attempt to curb the growth rate of the electricity used by networks. 
 \newline
 \newline
-In section \ref{researchExperiment} the information to answer the question 'What is the energy consumption of each WiFi standard?' was gathered. This resulted in several interesting findings. Specifically that, the power consumption of the older standards is indeed lower than the newer versions. However, due to those standards being slower more energy will be consumed when transmitting the same file. On the contrary, the idle power draw of the older standards is lower or equal to the newest standard in 2.4GHz and 5GHz.\newline
+%In section \ref{researchExperiment} the information to answer the question 'What is the energy consumption of each WiFi standard?' was gathered. 
+The experiment performed to gather the information regarding the energy consumption of the access point resulted in several interesting findings. Specifically that, while transmitting the power draw of the older 2.4GHz b and g standard is $0.17$ to $0.36$W lower compared to both 20MHz and 40MHz bandwidths on 2.4GHz 802.11n and similar holds for the 5GHz standards. Where 802.11a is $0.83$ and $0.46$ lower compared to 802.11n with a 40MHz bandwidth and 802.11ac with a 80MHz bandwidth respectively. 
+However, due to slower transfer rates of the older standards standards they consume more energy when transmitting the same file. Next to this the idle power draw experiment showed that the idle power draw of the 2.4GHz networks are within $0.04$W of each other. Within the 5GHz networks a larger difference can be found. 802.11n with a 40MHz bandwidth and all 802.11ac networks draw at least $0.44$W more compared to the networks running 802.11a and 802.11n with a 20MHz bandwidth.\newline
 \newline
-There is a specific WiFi standard that consumes the least amount of energy shown in table \ref{table:EnergyConAP}. This is the 802.11n standard using a 20MHz bandwidth. However, all 2.4GHz WiFi networks consume a very similar amount of energy while idling (column: Wh total idle). However, the calculations of the total energy consumption when idling means that the WiFi network is off, the newest 802.11ac with a 80MHz bandwidth standard becomes the most energy efficient standard. When idling the energy consumption of this standard is relatively high. Next to this, its fast transmissions creates an environment where the AP can be off/in sleep for a longer time. In the end this indicates that achieving lower idle power consumption either by switching to a WiFi standard with lower idle consumption or using wake/sleep (on/off) cycles are a good options.
+There is a specific WiFi standard that consumes the least amount of energy when looking only at the power draw of transmitting or idle one might expect that 802.11b, 802.11g or 802.11a would be the most efficient. However, table \ref{table:EnergyConAP} shows clearly that 2.4GHz 802.11n with a 20MHz bandwidth consumes $1636.53$Wh which is the least amount of energy of all standards, if the network remains active. This result changes when the total energy consumption is calculated when the AP turns of if not in use. In this case the newest 802.11ac with a 80MHz bandwidth standard becomes the most energy efficient standard with a total of $1574.97$Wh instead of $2312.78$. This difference comes from a high idle power draw combined with the fast transmissions rates of 802.11ac lengthening the time in which the AP can turned off. Based on these conclusions, the best reduction can be achieved when only using 2.4GHz 802.11n at a 20MHz bandwidth.
 \newline
 \newline
 %(b ii): 
@@ -37,7 +40,7 @@ In this thesis it has been shown that a dynamic/static switching method can help
 %     \end{enumerate}
 % \end{enumerate}
 
-\s
-
-
-ection{Future work}
+\section{Future work}
+Archer AC1750 -> Meer effect op higher end models?
+Test setup dus onderzoek naar verbuik met echt realistisch gebruik.
+Meer informatie over gebruik van de WiFi standaard.

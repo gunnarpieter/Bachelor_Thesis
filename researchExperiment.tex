@@ -67,8 +67,12 @@ The setup in figure \ref{fig:experiment-setup} consist of a few basic components
 \section{Results}
 In this section, the results from the energy consumption experiments outlined in section \ref{powerConsumptionMeasurement} are presented and examined in detail. The effects of the different WiFi standards on the energy consumption of the AP are explained, and various implications for design are discussed. The raw data can be found in appendix \ref{appendixC}.\newline
 \newline
-We tested every WiFi standard with 3 different files. The WiFi standards are categorized into two groups. Namely, 2.4GHz(blue) and 5GHz(orange) and arranged from old(left) to new(right). The average energy consumption of the 100MB transfer can be found in figure \ref{fig:results-100mb-energy}. Next to this, we have the average time \ref{fig:results-100mb-time} the transfer took and the average power consumption\ref{fig:results-100mb-power}. Only the 100MB test results are shown below, because the energy consumption and time results of the 1 and 10MB test have a very similar pattern. Displaying those results here too, would not contribute new information. Next to this, the power results of the 1 and 10 MB test are not shown here. This is due to the fact that the 100MB test is more accurate due to the higher number of samples that were taken during the test. Each sample has a smaller affect on the average.\newline
-Next to this, the results of the idle test show that the 2.4GHz networks take little more power than off does. A power increase is seen in the 5GHz networks, this is likely due to the 5GHz frequencies requiring more power to produce. The results of (b,g and n2-HT20), (a and n5-HT20) and (n5-HT40 and ac-VHT40 ) are very close this is likely due the use of the same bandwidth. However, this does not explain the difference between: (a, n5-HT20 and ac-VHT20). The measurements has been redone to eliminate background operations running on the AP from impacting the measurement, this still gave very similar results. Next to this, the largest single point deviation from the average can be found in the first n2-HT20 run, the deviation was 173.44 mJ. However, the measurement averages are very close to each other: 2219.56, 2219.60 and 2215.00.
+We tested every WiFi standard with 3 different files. The WiFi standards are categorized into two groups. Namely, 2.4GHz(blue) and 5GHz(orange) and arranged from old(left) to new(right). The average energy consumption of the 100MB transfer can be found in figure \ref{fig:results-100mb-energy}. Next to this, we have the average time the transfer took in figure \ref{fig:results-100mb-time} and the average power draw \ref{fig:results-100mb-power}.
+Only the 100MB test results are shown below, because the energy consumption and time results of the 1 and 10MB test have a very similar pattern.
+Displaying those results here too, would not contribute new information. Next to this, the power results of the 1 and 10 MB test are not shown here.
+This is due to the fact that the 100MB test is more accurate due to the higher number of samples that were taken during the test. Because each sample has a smaller affect on the average.\newline
+The results of the idle test show that the 2.4GHz networks take little more power than off does. A power increase is seen in the 5GHz networks, this is likely due to the 5GHz frequencies requiring more power to produce. The results of (b,g and n2-HT20), (a and n5-HT20) and (n5-HT40 and ac-VHT40 ) are very close this is likely due the use of the same bandwidth. However, this does not explain the difference between: (a, n5-HT20 and ac-VHT20). The measurements has been redone to eliminate background operations running on the AP from impacting the measurement, this still gave very similar results. 
+%Next to this, the largest single point deviation from the average can be found in the first n2-HT20 run, the deviation was 173.44 mJ. However, the averages of the three runs are very similar: 2219.56, 2219.60 and 2215.00.
 
 
 \begin{figure}[H]
@@ -147,7 +151,7 @@ Next to this, the results of the idle test show that the 2.4GHz networks take li
     \label{fig:results-100mb-energy}
 \end{figure} 
 
-\begin{figure}{H}
+\begin{figure}{}
     \centering    
     \begin{tikzpicture}
         \begin{axis}[
@@ -296,7 +300,7 @@ Next to this, the results of the idle test show that the 2.4GHz networks take li
         
         \end{axis}
     \end{tikzpicture}
-    \caption{Average power consumption of each WiFi standard during 100MB test in Watts. Blue represents the 2.4GHz WiFi networks and orange the 5GHz WiFi networks.}
+    \caption{Average power draw of each WiFi standard during 100MB test in Watts. Blue represents the 2.4GHz WiFi networks and orange the 5GHz WiFi networks.}
     \label{fig:results-100mb-power}
 \end{figure} 
 
@@ -306,9 +310,9 @@ Next to this, the results of the idle test show that the 2.4GHz networks take li
     \centering    
     \begin{tikzpicture}
         \begin{axis}[
-        title = Avg Idle Power Consumption,
+        title = Avg idle power draw,
         nodes near coords,
-        ylabel= Power Consumption (W),
+        ylabel= Power draw (W),
         height=6cm,
         width=12cm,
         %ybar=5pt,
@@ -380,8 +384,9 @@ Next to this, the results of the idle test show that the 2.4GHz networks take li
         
         \end{axis}
     \end{tikzpicture}
-    \caption{Average power consumption of each WiFi standard while idling in Watts. Gray is with all WiFi off, Blue represents the 2.4GHz WiFi networks and orange the 5GHz WiFi networks.}
+    \caption{Average power draw of each WiFi standard while idling in Watts. Gray is with all WiFi off, Blue represents the 2.4GHz WiFi networks and orange the 5GHz WiFi networks.}
     \label{fig:results-idle-power}
 \end{figure} 
 
-When looking at figure \ref{fig:results-100mb-energy} an decreasing pattern from older to new is visible in both the 2,4GHz and 5GHz category. We can see that the older WiFi standards actually use more energy when transmitting the same file in combination with the more time it took the older WiFi standards to transmit the text file. Interestingly, on the 100MB file test it is visible that the average power consumption of the oldest standards (b/a) is lower compared to the other standards. 
+When looking at figure \ref{fig:results-100mb-energy} an decreasing pattern from older to new is visible in both the 2,4GHz and 5GHz category. When looking at the 2.4GHz WiFi standards it becomes visible that the older b and g WiFi standards have a lower power draw compared to the 802.11n standard between $0.17$ to $0.36$W. However, these older standards have a lower transfer speed as explain in section \ref{wifiStandardsExplained} causing the transmission to take longer and thus also take more energy. 802.11b and g comsume $3.69$ and $2.49$ times as much energy as the average of 2.4GHz 802.11n standard. The same is visible on the 5GHz frequency where 802.11a draws between $0.46$ and $0.83$W less compared to the other 5GHz standards but due to the longer transmission it consumes 3.17 times as much energy as the average of all 5GHz standards.\\
+The idle power draw of the 2.4GHz standards are consistent and only have a small difference of $0.04$W at most, this is $0.01$W for the 5GHz standards 802.11a and 802.11n with a 20MHz bandwidth. The remaining 5GHz standards are closer to $3$W with the largest difference being $0.32$W.

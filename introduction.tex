@@ -27,11 +27,13 @@ is briefly mentioned (one sentence per chapter).
 %Since the creation of the internet, it has seen nonstop expansion with an estimate of 4131$\sim$4536 million users in 2019 \footnote{\url{https://www.statista.com/statistics/273018/number-of-internet-users-worldwide/}} \footnote{\url{https://www.internetworldstats.com/stats.htm}}.
 Within the Netherlands alone 98\% of the households have an internet connection. In those households, smartphones and laptops are the most common devices to surf the web with \cite{ICTUsageCBS}. Next to this,  WiFi networks are generally used for longer sessions transfering larger amounts of data than their cellular counter part \cite{5401061}.
 When talking about WiFi, smartphones and laptops are also known as stations (STAs) and use WiFi (IEEE 802.11) to connect with an access point (AP). The AP is a gateway that allows the devices to be wireless but still maintain access to the internet, transmitting and receiving the packets to and from stations. More and more of these networks are being installed. 
-The electricity consumption growth rate of communication networks, personal computers, and data centers has been estimated at 10\%, 5\% and 4\% respectively. This is higher than the estimated overall energy growth rate of 3\% \cite{VANHEDDEGHEM201464}. In 2007 these three used 3.9\% where as in 2012 this was 4.6\%.
+%The electricity consumption growth rate of communication networks, personal computers, and data centers has been estimated at 10\%, 5\% and 4\% respectively. This is higher than the estimated overall energy growth rate of 3\% \cite{VANHEDDEGHEM201464}. 
+In 2007 these three used 3.9\% where as in 2012 this was 4.6\%.
 Not only is the growth rate of the electricity consumption of networks substantial, but the contribution of networks to the total electricity usage of the ICT sector is also significant with 29\% \cite{ClickClean2016}.
 
-The Institute of Electrical and Electronics Engineers (IEEE) develops both the WiFi and Ethernet (802.3) standards.\\
-In an attempt to make the internet more energy efficient IEEE developed enhancements for the ethernet standard, Energy Efficient Ethernet 802.3az\cite{5621967}. However for the WiFi standard only STAs have the option to enter an energy efficient state. In this state the STA tells the AP that it will go into Power Saving Mode, the AP will buffer the packets that arrive for the STA and when the AP broadcasts its beacon. It will include which STAs have buffered packets. Such that those STAs can then retrieve their packets.\\
+%The Institute of Electrical and Electronics Engineers (IEEE) develops both the WiFi and Ethernet (802.3) standards.\\
+%"In an attempt to make the internet more energy efficient IEEE developed enhancements for the ethernet standard, Energy Efficient Ethernet 802.3az\cite{5621967}."\todo{Niet in intro deze zin maar in background wellicht wel?} 
+However for the WiFi standard only STAs have the option to enter an energy efficient state. In this state the STA tells the AP that it will go into Power Saving Mode, the AP will buffer the packets that arrive for the STA and when the AP broadcasts its beacon. It will include which STAs have buffered packets. Such that those STAs can then retrieve their packets.\\
 \\
 Different studies have been done to make WiFi networks more energy efficient. An example of this can be found in \cite{6970705} where an APs connections are offloaded to another AP when the total load on both APs allow this. Next to this, one could argue that ZigBee (802.15-4) can be used instead because it is more energy efficient compared to Wi-Fi however ZigBee has a maximum transfer rate of 250 Kbps\cite{FARAHANI20081}. Where 802.11n has a maximum transfer rate of 300 Mbps which is 1200 times more \footnote{https://www.actiontec.com/wifihelp/evolution-wi-fi-standards-look-802-11abgnac/}. WiFi is superior in data transfer rates, however greenifying WiFi access points is falling behind.
 % \subsection{Research question}\todo{Research question}
@@ -39,12 +41,9 @@ Access points are not optimized to conserve energy. This leads to the main resea
 \begin{itemize}
     \item \textbf{What are the possibilities of increasing the energy efficiency of an access point using the WiFi standards b/a/g/n/ac?}
 \end{itemize}
-This question will be answered using several sub questions. 
-\begin{itemize}
-    \item What is the energy consumption of each WiFi standard?\\
-          This question will be answered in section \ref{researchExperiment} using an experiment measuring both data transfer energy consumption and idle power consumption.
-\end{itemize}
+This question will be answered using several sub questions. Of which the first one is 'What is the energy consumption of each WiFi standard?'\\
+This question will be answered in section \ref{researchExperiment} using an experiment measuring both data transfer energy consumption and idle power consumption. It will provide insight into the energy consumption of each WiFi standard, such an bad utilisation of the WiFi standards can be avoided. Next to this, this will provide the ability to accurately calculate energy consumption of different scenarios.
 
  answer this question the energy consumption of an AP in file transfer and the power consumption of an idle AP must be know. To obtain this information  
-% \subsection{Contribution}
-\section{Structure}
+% \section{Contribution}
+%\section{Structure}
