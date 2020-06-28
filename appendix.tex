@@ -5,7 +5,7 @@ hypothesis, experiments, measurements, conclusions, etc. that would otherwise
 clutter the presentation of your research.
 
 
-\section{detailed AP setup}\label{access_point}
+\section{Detailed AP setup}\label{access_point}
 For this experiment a few criteria should be met by the Access Point: Support up to IEEE 802.11ac, OpenWRT 19.07.02 capable and be widely available. The access point thus became a TP-LINK Archer C7 AC1750 EU v2 it is an mid-range router that supports up to IEEE 802.11ac with a maximum speed of 450 Mbps and 1,3 Gbps on 2,4 GHz and 5GHz respectively. The AP can host a File Transfer Protocol (FTP) server. It is thus possible to remove the 'Server' part from the setup, however, this would diminish the resembles of the setup to a typical AP setups. Next to that, it would burden the AP with running a FTP-server and retrieving the file. Which will unnecessarily cause an increase in power consumption.
 \subsubsection{AP WiFi Settings}
 The AP needs to be told which WiFi settings to create a WiFi network with. Among these settings are what WiFi standard to allow/use and which bandwidth to use in OpenWRT these settings are called hwmode and htmode respectively. Within this paper these two settings will be used to force the AP in to creating connections with the specified standard. Two ways exist to adjust the settings of the network namely the web interface that is integrated in to OpenWRT and a wireless config file which can be accessed using SSH. Within this paper the SSH method is used to adjust the settings of the network directly. One of the configuration of the 5 GHz network used is displayed in listing \ref{code:5NetworkSettings}. 
@@ -25,7 +25,7 @@ config wifi-iface 'default_radio0'
         option ssid 'OpenWrt'
 \end{lstlisting}
 \noindent
-Visible here are the various settings used for the network but the interesting ones are hwmode and htmode or a lack thereof. The hwmode is set to the 5 GHz WiFi standard a, this standard does not come with the option to adjust the bandwidth. The option hwmode only supports the older versions of IEEE 802.11 (a/b/g), meaning that hwmode 'ac' does not work. However, that is where htmode can force IEEE 802.11 n and ac standards \cite{hwmodeHtmode}. Because out of the standards used n and ac are the only two that have the capability to adjust the bandwidth. Thus if the option of htmode is added to the wireless config file the AP will create a network using that bandwidth. Which are on within OpenWRT 'HT20' or 'HT40' for IEEE 802.11 n and 'VHT20', 'VHT40', 'VHT80' and 'VHT160' for IEEE 802.11ac. An example of this is listing \ref{code:5ACNetworkSettings} which displays the wireless config file for an network which only allows IEEE 802.11ac 80MHz connections.
+Visible here are the various settings used for the network but the interesting ones are hwmode and htmode or a lack thereof. The hwmode is set to the 5 GHz WiFi standard a, this standard does not come with the option to adjust the bandwidth. The option hwmode only supports the older versions of IEEE 802.11 (a/b/g), meaning that hwmode 'ac' does not work. However, that is where htmode can force IEEE 802.11 n and ac standards\footnote{\url{https://openwrt.org/docs/guide-user/network/wifi/basic}}. Because out of the standards used n and ac are the only two that have the capability to adjust the bandwidth. Thus if the option of htmode is added to the wireless config file the AP will create a network using that bandwidth. Which are on within OpenWRT 'HT20' or 'HT40' for IEEE 802.11 n and 'VHT20', 'VHT40', 'VHT80' and 'VHT160' for IEEE 802.11ac. An example of this is listing \ref{code:5ACNetworkSettings} which displays the wireless config file for an network which only allows IEEE 802.11ac 80MHz connections.
 
 \begin{lstlisting}[caption={5 GHz IEEE 802.11ac 80MHz network settings},label={code:5ACNetworkSettings}]
 config wifi-device 'radio0'
@@ -42,9 +42,9 @@ This paper will use the terms energy and power frequently. Energy is the cost to
 However for our AP it is not that simple. The problem is that it that the power or flow will not be as consistent. This means that very frequent measuring should take place to ensure that at the end of the performed work accurate energy calculations can be made.
 
 \chapter{Measurement code explained}\label{appendixB}
-Within this appendix we will explain the ins and outs of the code that is used to measure the amount of energy draw by the AP using the voltage/current v2 bricklets API\cite{tinkerforgeAPI}. The code can be found on GitLab\footnote{\url{https://gitlab.science.ru.nl/gnoordbruis/EnergyConsumption}}\newline 
+Within this appendix we will explain the ins and outs of the code that is used to measure the amount of energy draw by the AP using the voltage/current v2 bricklets API\footnote{\url{https://www.tinkerforge.com/en/doc/Software/Bricklets/VoltageCurrentV2_Bricklet_C.html#voltage-current-v2-bricklet-c-api}}. The code can be found on GitLab\footnote{\url{https://gitlab.science.ru.nl/gnoordbruis/EnergyConsumption}}\newline 
 \newline
-Within this program we use libcurl \cite{curl} to fetch the files from our server onto our query device. The code segments below are all code surrounding the retrieval of the file within the experiment and is mainly setting up curl and executing it.
+Within this program we use libcurl\footnote{\url{https://curl.haxx.se/}} to fetch the files from our server onto our query device. The code segments below are all code surrounding the retrieval of the file within the experiment and is mainly setting up curl and executing it.
 \begin{lstlisting}
 static size_t write(void* buffer, size_t size, size_t nmemb, void* param){
     std::string& text = *static_cast<std::string*>(param);
@@ -131,7 +131,7 @@ int main(void) {
     return 0;
 }\end{lstlisting}
 
-The idle power consumption of the access point has also been measured in section \ref{researchExperiment}. The Voltage current bricklet calls the callback function every 10ms. One second is 1000ms thus we need a 100 measurements to have the results of 1 second. This while loop prints the progress this is due to a problem mentioned in section \ref{MeasurementIssues} 
+The idle power consumption of the access point has also been measured in section \ref{researchExperiment}. The Voltage current bricklet calls the callback function every 10ms. One second is 1000ms thus we need a 100 measurements to have the results of 1 second. This while loop prints the progress this is due to a problem mentioned at the end of section \ref{powerConsumptionMeasurement}. 
 \begin{lstlisting}
 void idle(){
     int second = 100;

@@ -1,15 +1,11 @@
 \chapter{Related Work}\label{relatedwork}
+\begin{comment}
 In this chapter you demonstrate that you are sufficiently aware of the
 state-of-art knowledge of the problem domain that you have investigated as
 well as demonstrating that you have found a \emph{new} solution / approach / method.\newline \newline
+\end{comment}
 
-Many options exist to attempt to reduce the amount of energy used by a Access Point. Some of these options have already been reviewed and within these papers two many categories can be found.\newline
-The first category utilizes different modes of the AP, namely a wake and sleep mode or on and off. 
-
-
-The approach taken by the authors of \cite{6983074,4489442,pscBatteryWLAN} is putting the AP to sleep in between two separate beacons. OpenWRT uses a default beacon interval of 100 ms \cite{hwmodeHtmode} which is a small amount of time. This approach is interesting because such a system has been implemented on the station side to increase battery life. The a simple explanation to this system can be found in section \ref{section:PowerManagement}. Next to this, it provides prospective regarding the possible energy saving of other solutions as the authors \cite{6983074} have calculated an energy reduction of 17\%.
-
-
+Reducing energy consumption of an WiFi access point has seen many research attempts with a few different solutions. We will discuss three different solutions: wake/sleep cycle, TPC, and off loading. The first two of these solutions can be applied to a single AP where the third solution can only be applied to larger networks.
 
 % #ON/OFF or WAKE/SLEEP
 
@@ -31,8 +27,19 @@ The approach taken by the authors of \cite{6983074,4489442,pscBatteryWLAN} is pu
 
 	
 %# Dynamic SLEEP TIME
+The approach taken by the authors of \cite{6983074,4489442,pscBatteryWLAN} is putting the AP to sleep in between two separate beacons. OpenWRT uses a default beacon interval of 100 ms\footnote{\url{https://openwrt.org/docs/guide-user/network/wifi/basic}} which is a small amount of time. This approach is interesting because such a system has been implemented on the station side to increase battery life which is explained in section \ref{section:PowerManagement}. The advantage of such an approach is that the network can still be used. Nevertheless this approach has disadvantages too: more communication is required between the AP and its STAs to time transmitting, the sleep can add to the latency of packets and the sleep time might not be optimal. 
+%However, it provides prospective regarding the possible energy saving of other solutions as the authors \cite{6983074} have calculated an energy reduction of 17\%.\\
 \noindent
- An approach that utilizes the same technique but applies an enhancement is performed by the authors of \cite{7502830}. They do not use a fixed sleep/off time. This, is comparable to the approach of dynamically switching described in section \ref{section:SwitchingDynamically} as this also takes advantages of the lull periods to decrease the amount of energy consumed.
+ The authors of \cite{7502830} noticed the disadvantage of a static sleep time and proposed a dynamic sleep time instead. This, approach is more difficult to implement as the sleep time needs to be determined periodically. However, it can reduce the possible latency added by the sleep time because the sleep time will be smaller within the peak hours. This, is comparable to the approach of dynamically switching described in section \ref{section:SwitchingDynamically} as this also takes advantages of the lull periods to decrease the amount of energy consumed.\newline
+ \newline
+ The second approach is TPC used by \cite{6983074} and \cite{1400406}, which has been explained in section \ref{section:PowerManagement}. In short the AP attempts to keep the power used to transmit messages as close to the power that is required for the STAs to receive the message correctly. The advantage is that the messages under go no extra latency. However, due to the lower transmission power the problem of hidden station becomes bigger, this will increase possible interference. The authors of \cite{1400406} use a clear channel assessment to prevent the hidden station problem.\\
+ The third approach that will be discussed can only be applied to large scale networks. As the energy consumption is achieved by turning an AP off when there are no STAs connected to it. A good example is from the authors of \cite{8645048} their simulation showed that 70\% of the energy can be conserved while maintaining 92\% of the original coverage. Next to this, the authors of \cite{6970705} take it one step further and even attempt to off load active STAs to other APs if this means that the AP can be turned off. Large savings can be achieved with such an approach but they require a large set of access points to make it worth while and some system to control the APs.
+
+Within the cellular industry similar approaches as described above are taken to reduce the energy consumption of base stations (BSs). For example a sleep control scheme \cite{9061476} or IEEE 802.16e which supports a sleep mode mechanism \cite{5441285} and dynamic operation of cellular base stations, in which redundant base stations or parts of them are switched off during lull periods \cite{5783985,5671931}. The authors of \cite{6065681} present a survey of methods that have been or will be adopted in order to reduce energy consumption of base stations. They list improvements in: the power amplifier, cooling that amplifier, power saving protocols such as sleep modes, energy-aware cooperative BS power management (Turning off a BS depending on load), and renewable energy resources instead of diesel generators. However, 40\% to 45\% of the energy consumed by a cellular BS is wasted as heat requiring active cooling. Due to the very low transmission power of WiFi of 200mW vs 20W and 120W in 4G and 5G cellular antennas\footnote{\url{https://www.grandmetric.com/2019/03/26/5g-health-issues-explained/}} an WiFi AP does not need active cooling.
+
+
+
+
 
 % # Transmission Power Control (TPC) approach:
 % SP-TPC: a self-protective energy efficient communication strategy for IEEE 802.11 WLANs

@@ -1,21 +1,25 @@
-\chapter{Potential energy conservation}\label{research2}
+\chapter{Extrapolating measurement results}\label{research2}
 % This chapter, or series of chapters, delves into all technical details that are
 % required to \emph{prove} your scientific hypothesis.
 % It should be sufficiently detailed and precise in order for any fellow computing scientist student to be able to \emph{repeat}
 % your research and therewith establish the same results / conclusions that you have obtained.
 % Please note that, in order to improve readability of your thesis, you can put a part of this information also in one or
 %more appendices (see Appendix \ref{appendix}).
-\todo{Add text here}
+% \todo{Add text here}
 
-In this chapter we will be looking at dynamically switching and statically switching.
+
+In this chapter the energy consumption of an access point using only one standard and using standard switching for the time period of a month are calculated and analysed.\\
+This will be done using the results from the experiment in section \ref{researchExperiment}. The energy consumption of an access point can be calculated using the amount of data that needs to be transferred. From that amount and the WiFi standard, the transfer and idle time can be deduced. Using this information the total amount of energy consumed during a month can be calculated. The weighted amount of data transferred in Europe is 175.7GB per month in the first quarter of 2019 \cite{OpenVaultReport2019}.\\
+The measurements in chapter \ref{researchExperiment} have been performed within an interferenceless environment. Next to this, the transferred data was hosted locally, meaning that the full or close to full speeds of the standards can be used. Both of these attributes are desirable for validity of the results. However, they decrease the applicability of the extrapolations to the real world.
+
+
 \section{A single energy efficient standard}\label{MostEnergyEffStandard}
-In this section the energy consumption of an access point using only one standard will be calculated and analysed.\\
-This will be done using the results from the experiment in section \ref{researchExperiment}. The energy consumption of an access point can be calculated using the amount of data that needs to be transferred. 
-The weighted amount of data transferred in Europe is 175.7GB per month \cite{OpenVaultReport2019}. 
+
 %Europe has decreased ethernet usage but seems to have the same growth compared to the U.S.A where the weighted average is 273.5 
-In table \ref{table:EnergyConAP} the energy consumption of a month of an AP has been calculated with the access point idling with WiFi on and with WiFi off using 100mb transmit sizes. 
-The consumption when using the 1 and 10mb transmit sizes have also been calculated and provide identical results. These tables can be found in appendix \ref{StandardAPpowerconsumption}.
-Very visible is that the newer standards end up consuming more energy due to higher idling energy consumption. This difference is eliminated when the AP is turned off if not in use instead of idling.
+%The energy consumption of the AP a month will be calculated per standard both with with idling and with the WiFi networks off when the AP is not transmitting.
+In table \ref{table:EnergyConAP} the AP's energy consumption of a month has been calculated with the AP idling with WiFi on and with WiFi off and transmitting the 175.7GB in chunks of 100MB. 
+The consumption when using the 1 and 10MB transmit sizes have also been calculated and provide identical results. These tables can be found in appendix \ref{StandardAPpowerconsumption}.
+Very visible is that the newer 5GHz standards end up consuming more energy due to higher idling energy consumption. This difference is eliminated when the AP is turned off if not in use instead of idling with WiFi on.
 
 \begin{table}[H]
 \caption{Total number of Whs consumed by an AP per month using the weighted amount of data consumed in 1Q19, sending 100MB chunks }
@@ -43,11 +47,11 @@ Very visible is that the newer standards end up consuming more energy due to hig
 \end{table}
 Table \ref{table:EnergyConAP} shows that the 2.4GHz WiFi networks consume the least amount of energy without turning off the WiFi network when not in use (column: Wh total idle). However, the older standards also take their time when transmitting data.\newline
 Another interesting observation is that when the WiFi network is turned off outside of the needed data transmission (column: Wh total off) the newest 802.11ac with a 80MHz bandwidth (ac-VHT80) standard becomes the most energy efficient standard. \newline 
-When idling the energy consumption of this standard is the highest of all standards. Due to the fast transmissions the AP needs to spend less time transmitting and can spend more time sleeping. These results show that by switching to a WiFi standard with lower idle consumption or using wake/sleep (on/off) cycles a lower energy consumption can be achieved.
+When idling the energy consumption of this standard is the highest of all standards. But due to the fast transmissions the AP spends less time transmitting and can spend more time sleeping. These results show that by switching to a WiFi standard with lower idle consumption or using wake/sleep (on/off) cycles a lower energy consumption can be achieved.
 
 
 
-\section{Switching}\label{section:SwitchingDynamically}
+\section{Standard Switching}\label{section:SwitchingDynamically}
 \paragraph{Dynamically switching} between the different WiFi standards, means that the AP would choose a older/slower WiFi standard than the standard the AP has currently selected to operate on and switch to that standard when the AP is not actively used by the connected stations. Next to this, as the demand for more and faster data transmission rises that the AP if possible choose a newer/faster WiFi standard. 
 The goal of dynamically switching is to decrease the energy consumption by the AP and at the same time maintain usability and user comfort. 
 The switch frequency, the number of switches that the AP can make in a certain time period, is not defined. This is because if a switch is performed when the network is in use it will disturb the usability of the network and user comfort.
@@ -56,30 +60,23 @@ The switch frequency, the number of switches that the AP can make in a certain t
 
 \subsection{Drawbacks switching}
 Dynamically switching or statically switching has a few drawbacks compared to operating without WiFi standard restrictions. 
-The most prominent drawbacks are when such a switch occurs the AP can not send or receive data as the AP has to (partially) reboot and due to that the stations will have to go through the steps explained in section \ref{subsection:Network-AUTH-ASS} to re-authenticate and re-associate with the network. Next to this, if the WiFi network is password protected a key exchange must occur. For the experiment done in chapter \ref{researchExperiment} a few dozen of these switches have been performed manually.
-These switches took anywhere from 10 to 30 seconds. 
+The most prominent drawbacks are when such a switch occurs the AP can not send or receive data as the AP has to (partially) reboot and due to that the stations will have to go through the steps explained in section \ref{subsection:Network-AUTH-ASS} to re-authenticate and re-associate with the network. Next to this, if the WiFi network is password protected a key exchange must occur. 
+%For the experiment done in chapter \ref{researchExperiment} a few dozen of these switches have been performed manually.
+%These switches took anywhere from 10 to 30 seconds. 
 
 \subsection{Outcome}\label{outcomeSwitching}
-The results from the experiment performed in section \ref{researchExperiment} have shown that older WiFi standards consume more energy when transmitting but less energy when idling. This means that either dynamically or statically switching, can lead to a reduction in the energy consumption of the access point.\newline
-This reduction should be found not when transmitting data but when the WiFi point is idling. Because then the extra time the older WiFi standards take to transmit, will vanquish the small amount of power draw difference seen in figure \ref{fig:results-100mb-power}. However, figure \ref{fig:results-idle-power} shows a significant power draw difference when idling. Next to this, it is apparent from figure \ref{fig:results-idle-power} that it does not truly matter to which older standard one switches.
-Just that the switch should be between 2.4GHz and 5GHz. Table \ref{table:EnergyConsAPPerDay} shows that switching to IEEE 802.11g results in similar power reduction when compared to n2-HT20. Next to this, when a switch is made to the IEEE 802.11 b or g standard the user will see significant reduction in user comfort purely due to lower transfer speeds compared to IEEE 802.11n on a 2.4GHz frequency. \newline
+The results from the experiment performed in section \ref{researchExperiment} have shown that older WiFi standards consume more energy when transmitting but less energy when idling. This means that standard switching, can lead to a reduction in the energy consumption of the access point.\newline
+This reduction should not be sought when transmitting data but when the WiFi point is idling. Because then the extra time the older WiFi standards take to transmit, will vanquish the small amount of power draw difference seen in figure \ref{fig:results-100mb-power}. However, figure \ref{fig:results-idle-power} shows a significant power draw difference when idling. 
+Next to this, it is apparent from figure \ref{fig:results-idle-power} that among the 2.4GHz standards no switch is needed as no gain can be made other than turning the network off. Moreover, from the newest 5GHz networks a switch could be made to either 5GHz or 2.4GHz 802.11n with a 20MHz bandwidth. The first will ensure a more energy efficient 5GHz network with a slightly higher transfer rate where the later is the most energy efficient switch.
+Table \ref{table:EnergyConsAPPerDay} shows that switching to IEEE 802.11g results in similar power reduction when compared to n2-HT20. Next to this, when a switch is made to the IEEE 802.11 b or g standard the user will see significant reduction in user comfort purely due to lower transfer speeds compared to IEEE 802.11n on a 2.4GHz frequency. \newline
 \newline
-
-% \begin{enumerate}
-%     \item explain what switching dynamically is
-%     \item the difficulties/problem
-%     \item Conclude that this will not be possible.
-% \end{enumerate}
-
-
-
 To provide an close approximation on the energy that can be conserve using this strategy, we attempt to calculate the total energy consumption of the access point. For this calculation several assumptions must be made:
 \begin{enumerate}
     \item The faster IEEE 802.11ac with its 80MHz bandwidth (AC-VHT80) is used for 5 hours a day to provide superior speeds than any 2.4GHz standard.
-    \item Within those 5 hours 50\% of the daily data is transmit (175.7 a month, $\frac{365 \mbox{ days}}{12 \mbox{ months}} \approx 30.42$ days a month thus $\frac{175.7 GB}{30.42 days} \approx 5.78$ GB per day, $\frac{5.78 GB}{2} \approx 2.89$)
+    \item Within those 5 hours 50\% of the daily data is transmit (175.7 a month, $\frac{365 \mbox{ days}}{12 \mbox{ months}} \approx 30.42$ days a month thus $\frac{175.7 GB}{30.42 days} \approx 5.78$ GB per day, $\frac{5.78\textrm{GB}}{2} \approx 2.89$GB)
     \item Within the remaining 19 hours the other 50\% is transmit.
-    \item During the 19 hour period IEEE 802.11n on a 2.4GHz frequency (n2-HT20 or n2-HT40) is used.
-    \item In this example the two switches have not been accounted for. This is at most 30 seconds each in which the network is offline. 
+    \item During the 19 hour period either IEEE 802.11g, both bandwidths 2.4 GHz 802.11n or 5GHz 802.11n with a 20MHz bandwidth (g, n2-HT20, n2-HT40, or n5-HT20) is used.
+    \item In this example the switches have not been accounted for.
 \end{enumerate}
 
 
@@ -94,12 +91,13 @@ WiFi standard &
   \begin{tabular}[c]{@{}l@{}}Time spent\\ transmitting (s) \end{tabular} &
   \begin{tabular}[c]{@{}l@{}}Amount of J\\  to send data\end{tabular} &
   \begin{tabular}[c]{@{}l@{}}Amount of J\\  to idle\end{tabular} &
-  \begin{tabular}[c]{@{}l@{}}Total consumption \\per x hours and\\ y\%  of data (J)\end{tabular} \\ \hline \hline
+  \begin{tabular}[c]{@{}l@{}}Total consumption \\per x hours and\\ 50\%  of data (J)\end{tabular} \\ \hline \hline
 AC-VHT80 & 2.89       & 5     &  88.86         & 344.09   & 56719.82            & 57063.90  \\ \hline
 G        & 2.89       & 19    &  1094.64       & 4224.33  & 148567.20           & 152791.53  \\ \hline
 N2-HT20  & 2.89       & 19    &  565.90        & 2282.28  & 150459.66           & 152741.95 \\ \hline
 N2-HT40  & 2.89       & 19    &  275.82        & 1111.99  & 153608.15           & 154720.14 \\ \hline
-AC-VHT80 & 5.78      & 24    &  177.72        & 688.17   & 273043.04           & 273731.21 \\ \hline
+N5-HT20  & 2.89       & 19    &  414.84        & 1712.51  & 163143.39           & 164855.91 \\ \hline
+AC-VHT80 & 5.78       & 24    &  177.72        & 688.17   & 273043.04           & 273731.21 \\ \hline
 \end{tabular}%
 }
 \end{table}
@@ -114,12 +112,13 @@ WiFi standard     & Total per month (Wh) & \% of energy conserved \\ \hline \hli
 AC-VHT80+G      : & 1776.08              & 23.38                \\ \cline{2-3}
 AC-VHT80+N2-HT20: & 1772.67              & 23.40                \\ \cline{2-3} 
 AC-VHT80+N2-HT40: & 1789.38              & 22.68                \\ \cline{2-3}
+AC-VHT80+N5-HT20: & 1875.02              & 18.98                \\ \cline{2-3}
 AC-VHT80 (100\%): & 2314.28              &                      \\ \cline{2-3} 
 \end{tabular}%
 }
 \end{table}
 
-Within table \ref{table:MonthEnergyCons} we can see that by switching $22.68\% \sim 23.40\%$  of the energy consumption of the access point can be saved. This is higher but comparable to the 17\% reduction in \cite{6983074} where a wake/skeep cycle and TPC was applied. 
+Within table \ref{table:MonthEnergyCons} we can see that by switching to a 2.4GHz standard (g, n2-HT20, n2-HT40) $22.68\% \sim 23.40\%$ of the energy consumption of the access point can be saved and 18.98\% when switching to 5GHz 802.11n with a 20MHz bandwidth (n5-HT20). This is higher but comparable to the 17\% the authors of \cite{6983074} were able to achieve using a wake/skeep cycle and TPC. 
 
 
 % \subsection{Efficient WiFi}\label{EfficientWiFi}

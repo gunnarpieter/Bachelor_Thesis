@@ -7,26 +7,25 @@
 
 
 
-This thesis conducted an experiment into the energy consumption of the IEEE 802.11 WiFi standards b/a/g/n/ac on an Archer AC1750 access point. 
-Several measurements have been performed to achieve this, namely a file transfer using a 1, 10 and 100mb file and an idle measurement. Every measurement has been performed in a low-radiation environment. Meaning no presence of cellular signal or other WiFi networks.
-Next to this, it looked more closely at switching between these standards as a way of saving energy and applying the knowledge gained about the standards in an attempt to curb the growth rate of the electricity used by networks. 
+This thesis conducted an experiment into the energy consumption of the IEEE 802.11 WiFi standards b/a/g/n/ac on an Archer C7 AC1750 access point. 
+Several measurements have been performed to achieve this, a file transfer using 1, 10 and 100MB files and an idle power draw measurement. Every measurement has been performed three times in an environment without interference from cellular signal or other WiFi networks/devices.
+Next to this, we looked more closely at the energy consumption of an AP using one standard and using standard switching within a period of a month as a way of saving energy in an attempt to curb the growth rate of the energy used by networks. 
 \newline
 \newline
 %In section \ref{researchExperiment} the information to answer the question 'What is the energy consumption of each WiFi standard?' was gathered. 
 The experiment performed to gather the information regarding the energy consumption of the access point resulted in several interesting findings. Specifically that, while transmitting the power draw of the older 2.4GHz b and g standard is $0.17$ to $0.36$W lower compared to both 20MHz and 40MHz bandwidths on 2.4GHz 802.11n and similar holds for the 5GHz standards. Where 802.11a is $0.83$ and $0.46$ lower compared to 802.11n with a 40MHz bandwidth and 802.11ac with a 80MHz bandwidth respectively. 
-However, due to slower transfer rates of the older standards standards they consume more energy when transmitting the same file. Next to this the idle power draw experiment showed that the idle power draw of the 2.4GHz networks are within $0.04$W of each other. Within the 5GHz networks a larger difference can be found. 802.11n with a 40MHz bandwidth and all 802.11ac networks draw at least $0.44$W more compared to the networks running 802.11a and 802.11n with a 20MHz bandwidth.\newline
+However, due to slower transfer rates of the older standards more energy is consumed when transmitting the same file. Next to this the idle power draw experiment showed that the idle power draw of the 2.4GHz networks are within $0.04$W of each other. Within the 5GHz networks a larger difference can be found. 802.11n with a 40MHz bandwidth and all 802.11ac networks draw at least $0.44$W more compared to the networks running 802.11a and 802.11n with a 20MHz bandwidth.\newline
 \newline
-There is a specific WiFi standard that consumes the least amount of energy when looking only at the power draw of transmitting or idle one might expect that 802.11b, 802.11g or 802.11a would be the most efficient. However, table \ref{table:EnergyConAP} shows clearly that 2.4GHz 802.11n with a 20MHz bandwidth consumes $1636.53$Wh which is the least amount of energy of all standards, if the network remains active. This result changes when the total energy consumption is calculated when the AP turns of if not in use. In this case the newest 802.11ac with a 80MHz bandwidth standard becomes the most energy efficient standard with a total of $1574.97$Wh instead of $2312.78$. This difference comes from a high idle power draw combined with the fast transmissions rates of 802.11ac lengthening the time in which the AP can turned off. Based on these conclusions, the best reduction can be achieved when only using 2.4GHz 802.11n at a 20MHz bandwidth.
+%There is a specific WiFi standard that consumes the least amount of energy. 
+The most energy efficient WiFi standard is not 802.11b, 802.11g or 802.11a as one might expect from their low power draw while transmitting and idling. But, 2.4GHz 802.11n with a 20MHz bandwidth with a total energy consumption of $1636.53$Wh shown in table \ref{table:EnergyConAP} while the network remains on. This result, changes when the total energy consumption is calculated when the AP turns off when not in use. In this case the newest 802.11ac with a 80MHz bandwidth standard becomes the most energy efficient standard with a total of $1574.97$Wh instead of $2312.78$Wh. This difference comes from a high idle power draw combined with the fast transmissions rates of 802.11ac lengthening the time in which the AP can turned off. Based on these conclusions, the best reduction can be achieved when only using 2.4GHz 802.11n at a 20MHz bandwidth.
 \newline
 \newline
 %(b ii): 
-The results described in section \ref{section:SwitchingDynamically} show that dynamically/statically switching can lead to a reduction in the energy consumption of roughly 23\% of an access point. 
-However, a key point is that the reduction will not come from less energy consumption during transmission of data but from the difference in idling power draw of each WiFi standard. 
-Next to this, it is apparent that the switch should also not be between old and new but 2.4GHz and 5GHz. 
-This can be concluded from table \ref{table:MonthEnergyCons} where the percentage of energy conserved by the switch to 802.11g is lower but close to the same switch but then to 802.11n with a 20MHz bandwidth. 
-Next to this, the transmission time of the data almost doubles between these different standards. Impacting user comfort and the usability of the WiFi network.\newline
+The results described in section \ref{section:SwitchingDynamically} show that standard switching can lead to a reduction in the energy consumption of roughly 23\%. 
+However, a key point is that the reduction will come from the difference in idling power draw between the standards and not from using less energy during transmission. 
+Thus, among the 2.4GHz standards no switch is needed as almost no gain can be made other than turning the network off. Moreover, from the newest 5GHz networks a switch could be made to either 5GHz or 2.4GHz 802.11n with a 20MHz bandwidth. The first will ensure a more energy efficient 5GHz network where the later is the most energy efficient switch. A switch to 802.11g would not be useful as shown in table \ref{table:MonthEnergyCons} the percentage of energy conserved by the switch to 802.11g is lower but close to the switch to 802.11n with a 20MHz bandwidth. More importantly, the transmission time of the data almost doubles between these different standards. Impacting user comfort and the usability of the WiFi network.\newline
 \newline
-In this thesis it has been shown that a dynamic/static switching method can help to reduce the energy consumption of an access point. Next to this, the results in this paper support the solution of utilizing a wake/sleep cycle which has been applied in papers \cite{6983074,4489442,pscBatteryWLAN,7502830}. 
+In this thesis it has been shown that standard switching can help to significantly reduce the energy consumption of an access point. Next to this, the results in this paper support the solution of utilizing a wake/sleep cycle which has been applied in papers \cite{6983074,4489442,pscBatteryWLAN,7502830}. We recommend standard switching be applied to APs which see varying degrees of activity through out a period of time over a wake/sleep cycle. Due to the extra required co-ordination between APs and STAs when using a wake/sleep cycle.
 
 % \begin{enumerate}
 %     \item Welke mogelijkheden zijn er om een Access Point energiezuinger te laten functioner met gebruik van de WiFi standaarden?
@@ -39,8 +38,6 @@ In this thesis it has been shown that a dynamic/static switching method can help
 %             \end{enumerate}
 %     \end{enumerate}
 % \end{enumerate}
-
+\newpage
 \section{Future work}
-Archer AC1750 -> Meer effect op higher end models?
-Test setup dus onderzoek naar verbuik met echt realistisch gebruik.
-Meer informatie over gebruik van de WiFi standaard.
+The Archer C7 AC1750 is a readily available mid-range router with a price around $70\sim100$\euro. This leaves the question of how effective standard switching is regarding low-end or high-end routers open. A possible research option is thus applying standard switching to multiple routers.\newline Another possible research avenue is the fact that the setup used to gather information in this thesis was systematical and thus further away realistic home use. It would be interesting to apply standard switching to more realistic data. Furthermore, little information regarding the distribution of devices over the WiFi standards is known. With this data more precise estimates can be made regarding the impact of standard switching on the energy consumption of access points.

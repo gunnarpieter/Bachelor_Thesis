@@ -16,25 +16,22 @@ more appendices (see Appendix \ref{appendix}).
 
 
 In  this  chapter, the measurement methodology that is used to measure the power consumption of the WiFi standards is described. Next to that results of these measurements will be discussed. \\
-\\
-The goal is to reduce the energy consumption of a wireless access point by switching between WiFi standards. To determine if this solution will be effective, the energy consumption of the different WiFi standards must be measured. This will be done using an experiment where we will measure the energy consumption of each WiFi standard when retrieving a hosted file.
+The goal is to reduce the energy consumption of a wireless access point using the WiFi standards. To determine which approaches can reduce the energy consumption of the AP, the energy consumption of the different WiFi standards must be known. This, will be done using an experiment measuring the power draw when retrieving a hosted file and the power draw when idling with the network on and off. To be precise, idle means that there is no data being transferred between the AP and any of its STAs.
 
 \section{Methodology energy consumption measurements}\label{powerConsumptionMeasurement}
-
-\todo{Add that the text file that was used consists of }
-\todo{add That this experiment measures the energy consumption of sending not idle }
- This file will be hosted locally on the network to guarantee identical circumstances among each run of the experiment. The server that hosts this file is connected to the AP with an ethernet cable. Both of these attributes create an environment, in which any delay or congestion can only be caused by the WiFi network. The tests have been performed in a location without cellular signal and interference from other WiFi networks. Because of this, the consequences of the variable is measured, this gives valid measurement results.
+ The file that will be used to measure the transmitting energy consumption will be hosted locally on the network to guarantee identical circumstances among each run of the experiment. The server that hosts this file is connected to the AP with an ethernet cable. Both of these attributes create an environment, in which any delay or congestion can only be caused by the WiFi network. The tests have been performed in a location without cellular signal and interference from other WiFi networks/devices. Because of this, the consequences of the variable is measured, this gives high validity measurement results.
 %The major part of these circumstances that must be identical is file retrieval time, as the energy consumption increases with time. Thus having some retrievals last longer compared to others will have unwanted impact on the results.
 \\
 \\
-The file that will be retrieved with a run is one of three different size files, 1MB, 10MB and 100MB. We decided to diversify the sample files to gain data that represents normal use more compared to only one 10MB file. The actual size of the sample files is arbitrary. Other file sizes like 3 MiB would work just as good, but would have been less easy to work with. The sizes could be associated with for example a website which is usually below or around the 1MB in size\cite{websiteSize}, image and video streaming. Next to that, we want to limit the possibility that one standard has unexpected benefits with a specific file size.\\
+The file that will be retrieved with a run is one of three different sizes, 1MB, 10MB and 100MB. We decided to diversify the sample files to gain data that represents normal use more compared to only one size. The actual size of the sample files is arbitrary. Other file sizes like 3 MiB would work just as good, but would have been less easy to work with. The sizes could be associated with for example a websites, images or video streaming. Next to that, we want to limit the possibility that one standard has unexpected benefits with a specific file size.\\
 \\
-Measuring the power consumption is done using a tinkerforge voltage/current bricklet v2\footnote{\url{https://www.tinkerforge.com/en/doc/Hardware/Bricklets/Voltage_Current_V2.html}}\todo{Moet dit met een cite zijn of is de footnote goed? cite{tinkerforgeVoltageCurrentDoc}}, which is made up out of an ina 226. 
+Measuring the power consumption is done using a tinkerforge voltage/current bricklet v2\footnote{\label{tinkerforgeVoltageCurrentDoc}\url{https://www.tinkerforge.com/en/doc/Hardware/Bricklets/Voltage_Current_V2.html}}, which is made up out of an ina 226. 
 This, bricklet measures DC energy consumption, meaning that it is placed between the AP and its power plug. 
-Next to this, the bricklet has a resolution of 1mW, 1mV and 1mA \cite{tinkerforgeVoltageCurrentDoc}. The measured values thus has an error of $\rpm 1$mW. The power cable has been cut and spliced open to connect the bricklet inline. 
+Next to this, the bricklet has a resolution of 1mW, 1mV and 1mA\footnotemark[\ref{tinkerforgeVoltageCurrentDoc}]. 
+The measured values thus has an error of $\rpm 1$mW. The power cable has been cut and spliced open to connect the bricklet inline. 
 This is beneficial as the power loss due to AC to DC conversion of the power plug is not measured. An overview of the setup can be viewed in figure \ref{fig:experiment-setup} \newline
 \newline
-For the idle power consumption test 1 minute of power consumption was measured 3 times for each standard including having all WiFi networks turned off. This has been done using the same setup as the file transfer measurements. 
+For the idle power consumption test one minute of power consumption was measured 3 times for each standard. The same three one minute power consumption measurement was done with the WiFi networks off. This has been done using the same setup as the file transfer measurements. 
 
 \begin{figure}
     \centering
@@ -42,11 +39,6 @@ For the idle power consumption test 1 minute of power consumption was measured 3
     \caption{Setup of test network}
     \label{fig:experiment-setup}
 \end{figure}
-% \todo{I have performed extra measurement of the idle energy consumption of the WiFi standards}
-% Hoe heb ik dat onderzoek gedaan?
-% En waarom? \\
-%     Om een goede berekening te maken van het daadwerkelijke energy verbruik van het AP over tijd.
-% \\
 The setup in figure \ref{fig:experiment-setup} consist of a few basic components:
 \begin{enumerate}
     \item Query Device - This is WiFi capable laptop of up to IEEE 802.11ac
@@ -56,23 +48,23 @@ The setup in figure \ref{fig:experiment-setup} consist of a few basic components
     \item Ina 226 voltage current bricklet - this device measures the power consumption of the Access Point. It is controlled by a Master Brick v2.1
 \end{enumerate}
 
-\paragraph{Measurement issues}\label{MeasurementIssues} occurred during the experiment though the measurements went reasonably smooth.
+During the experiment some issues occurred although the measurements went reasonably smooth. The following issues have all been solved and did not impact the results. 
 \begin{itemize}
     \item In one instance the retrieval of the file over the WiFi standard 'b' crashed. The cause of the problem is unknown but was not encountered again in later retrievals.
     \item On several occasions the AP did not ad hear to the set parameters. This issues was solved by either rebooting or factory resetting and reapplying the settings if rebooting did not work.
-    \item When sequentially doing the same test the Tinkerforge voltage/current v2 bricklet would not start or end measurement accurately. The retrieval time would doubled with every run. The cause of this is unknown but we suspect it has to do with code optimization. Next to this, it could easily be avoided by altering the program to through out the execution phase of the program only perform one test. This gave more consistent results.
-    \item During the measurement of the idle power draw an empty while loop would stop looping before achieving a false boolean value. The value in this case was the number of measurements taken. Causing the measurements to never stop. This was solved by printing the progress of the measurements.
+    
+    \item When sequentially doing the same test the Tinkerforge voltage/current v2 bricklet would not start or end measurement accurately. The cause of this is unknown. Next to this, it could easily be avoided by altering the program only perform one test instead of all. This gave more consistent results.
+    
+    \item During the measurement of the idle power draw an empty while loop would stop looping before achieving a false boolean value. The value in this case was a comparison between the number of measurements taken and the number of measurements that need to be taken. This problem caused some objects to not be destroyed. Meaning that the measurement would never stop. This was solved by printing the progress of the measurements in the while loop.
 \end{itemize}
 
 \section{Results}
 In this section, the results from the energy consumption experiments outlined in section \ref{powerConsumptionMeasurement} are presented and examined in detail. The effects of the different WiFi standards on the energy consumption of the AP are explained, and various implications for design are discussed. The raw data can be found in appendix \ref{appendixC}.\newline
 \newline
-We tested every WiFi standard with 3 different files. The WiFi standards are categorized into two groups. Namely, 2.4GHz(blue) and 5GHz(orange) and arranged from old(left) to new(right). The average energy consumption of the 100MB transfer can be found in figure \ref{fig:results-100mb-energy}. Next to this, we have the average time the transfer took in figure \ref{fig:results-100mb-time} and the average power draw \ref{fig:results-100mb-power}.
-Only the 100MB test results are shown below, because the energy consumption and time results of the 1 and 10MB test have a very similar pattern.
-Displaying those results here too, would not contribute new information. Next to this, the power results of the 1 and 10 MB test are not shown here.
-This is due to the fact that the 100MB test is more accurate due to the higher number of samples that were taken during the test. Because each sample has a smaller affect on the average.\newline
-The results of the idle test show that the 2.4GHz networks take little more power than off does. A power increase is seen in the 5GHz networks, this is likely due to the 5GHz frequencies requiring more power to produce. The results of (b,g and n2-HT20), (a and n5-HT20) and (n5-HT40 and ac-VHT40 ) are very close this is likely due the use of the same bandwidth. However, this does not explain the difference between: (a, n5-HT20 and ac-VHT20). The measurements has been redone to eliminate background operations running on the AP from impacting the measurement, this still gave very similar results. 
-%Next to this, the largest single point deviation from the average can be found in the first n2-HT20 run, the deviation was 173.44 mJ. However, the averages of the three runs are very similar: 2219.56, 2219.60 and 2215.00.
+We tested every WiFi standard with 3 different files. The WiFi standards are categorized into two groups. Namely, 2.4GHz(blue) and 5GHz(orange) and arranged from old(left) to new(right). The average energy consumption of the 100MB transfer can be found in figure \ref{fig:results-100mb-energy}. Next to this, we have the average time the transfer took in figure \ref{fig:results-100mb-time} and the average power draw in figure \ref{fig:results-100mb-power}.
+Only the 100MB test results are shown below, because the energy consumption, power draw, and time results of the 1 and 10MB test have a very similar pattern.
+Displaying those results here too, would not contribute new information. Next to this, the 100MB test is more accurate due each sample contributing less to the total average.
+
 
 
 \begin{figure}[H]
@@ -227,7 +219,7 @@ The results of the idle test show that the 2.4GHz networks take little more powe
     \label{fig:results-100mb-time}
 \end{figure} 
 
-% Average power consumption per WiFi standard
+% Average power draw per WiFi standard
 \begin{figure}[H]
     \centering    
     \begin{tikzpicture}
@@ -305,7 +297,7 @@ The results of the idle test show that the 2.4GHz networks take little more powe
 \end{figure} 
 
 
-% Average power consumption per WiFi standard
+% Average idle power draw per WiFi standard
 \begin{figure}[H]
     \centering    
     \begin{tikzpicture}
@@ -313,7 +305,7 @@ The results of the idle test show that the 2.4GHz networks take little more powe
         title = Avg idle power draw,
         nodes near coords,
         ylabel= Power draw (W),
-        height=6cm,
+        height=5.5cm,
         width=12cm,
         %ybar=5pt,
         legend style={area legend,at={(0.5,-0.3)},anchor=north,legend columns=-1},
@@ -384,9 +376,15 @@ The results of the idle test show that the 2.4GHz networks take little more powe
         
         \end{axis}
     \end{tikzpicture}
-    \caption{Average power draw of each WiFi standard while idling in Watts. Gray is with all WiFi off, Blue represents the 2.4GHz WiFi networks and orange the 5GHz WiFi networks.}
+    \caption{Average power draw of each WiFi standard while idling in Watts. Gray, blue and orange represent WiFi networks off, 2.4GHz WiFi networks, and 5GHz WiFi networks respectively.}
     \label{fig:results-idle-power}
 \end{figure} 
 
-When looking at figure \ref{fig:results-100mb-energy} an decreasing pattern from older to new is visible in both the 2,4GHz and 5GHz category. When looking at the 2.4GHz WiFi standards it becomes visible that the older b and g WiFi standards have a lower power draw compared to the 802.11n standard between $0.17$ to $0.36$W. However, these older standards have a lower transfer speed as explain in section \ref{wifiStandardsExplained} causing the transmission to take longer and thus also take more energy. 802.11b and g comsume $3.69$ and $2.49$ times as much energy as the average of 2.4GHz 802.11n standard. The same is visible on the 5GHz frequency where 802.11a draws between $0.46$ and $0.83$W less compared to the other 5GHz standards but due to the longer transmission it consumes 3.17 times as much energy as the average of all 5GHz standards.\\
-The idle power draw of the 2.4GHz standards are consistent and only have a small difference of $0.04$W at most, this is $0.01$W for the 5GHz standards 802.11a and 802.11n with a 20MHz bandwidth. The remaining 5GHz standards are closer to $3$W with the largest difference being $0.32$W.
+When looking at figure \ref{fig:results-100mb-energy} an decreasing pattern from old to new is visible in both the 2,4GHz and 5GHz category. 
+Figure \ref{fig:results-100mb-power} shows that in the 2.4GHz category the older b and g WiFi standards have a lower power draw compared to the 802.11n standard of $0.17$ to $0.36$W. 
+However, these older standards also have a lower transfer speed as explain in section \ref{wifiStandardsExplained} causing the transmission to take longer and thus staying longer within the higher power draw state. 802.11b and g consume $3.69$ and $2.49$ times as much energy as the average of 2.4GHz 802.11n standard. 
+The same is visible on the 5GHz frequency where 802.11a draws between $0.46$ and $0.83$W less compared to the other 5GHz standards but due to the longer transmission it consumes 3.17 times as much energy as the average of all 5GHz standards.\\
+The idle power draw of the 2.4GHz standards are consistent and only have a small difference of $0.04$W at most, this is $0.01$W for the 5GHz standards 802.11a and 802.11n with a 20MHz bandwidth. The remaining 5GHz standards are closer to $3$W with the largest difference being $0.32$W.\newline
+\newline
+The results, figure \ref{fig:results-idle-power}, of the idle test show that the 2.4GHz networks take $\pm0.08$W more compared to off. The difference is larger in the 5GHz networks, due to the 5GHz frequencies requiring more power to produce. The results of (b,g and n2-HT20), (a and n5-HT20) and (n5-HT40 and ac-VHT40 ) are very close this is likely due the use of the same bandwidth. However, this does not explain the difference between: (a, n5-HT20 and ac-VHT20). The measurements have been redone to eliminate possible background operations from impacting the measurement, this still gave the same results. 
+%Next to this, the largest single point deviation from the average can be found in the first n2-HT20 run, the deviation was 173.44 mJ. However, the averages of the three runs are very similar: 2219.56, 2219.60 and 2215.00.
