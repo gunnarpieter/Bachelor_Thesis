@@ -1,3 +1,5 @@
+# Energy efficient WLAN using WiFi standards b/a/g/n/ac on an Archer C7 AC1750 access point
+## Abstract
 My thesis investigates the possibilities of increasing the energy efficiency of an access point using the WiFi standards 802.11 b/a/g/n/ac with their respective bandwidths.
 An experiment was conducted to establish the power consumption of an Archer C7 AC1750 access point. Next to this, three simulations were performed extrapolating the data gathered from the experiment. This was done to get insight in to the energy consumption of the access point over the period of a month.
 The experiment performed shows that the b, a and g standards draw less power compared to the their 2.4GHz and 5GHz counter parts but due to a longer transmission time the total consumed amount of energy is significantly larger.
